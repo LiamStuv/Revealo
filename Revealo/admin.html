@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelo Organiser Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: #0b0c10;
+            color: #1c1d21;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            height: fit-content;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        p.sub {
+            color: #6b7f8e;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8a7246;
+            font-weight: 700;
+            margin: 24px 0 12px 0;
+        }
+
+        .auth-box {
+            background: #f7f5f0;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid #eae5dc;
+            text-align: center;
+        }
+
+        .auth-box h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .auth-box input,
+        .auth-box select,
+        .auth-box textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #1c1d21;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #6b7f8e;
+            border: none;
+            font-size: 11px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .share-banner {
+            background: linear-gradient(135deg, #1c1d21 0%, #2a2c35 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+
+        .share-banner h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: #cbb281;
+            margin-bottom: 4px;
+        }
+
+        .share-banner p {
+            font-size: 12px;
+            color: #a0a5b5;
+            margin-bottom: 14px;
+        }
+
+        .share-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .share-input-group input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: monospace;
+        }
+
+        .btn-copy {
+            background: #cbb281;
+            color: #1c1d21;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-wa {
+            width: 100%;
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #eae5dc;
+            padding: 14px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card span {
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .stat-card label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #8a7246;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th {
+            padding: 10px;
+            background: #eae5dc;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badge-yes {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .badge-no {
+            background: #f8d7da;
+            color: #842029;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-download-all {
+            background: #1c1d21;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-logout {
+            background: #f8d7da;
+            color: #842029;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .event-selector-box {
+            background: #eae5dc;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .event-selector-box select {
+            margin-bottom: 0;
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .btn-add-event {
+            background: #8a7246;
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #1c1d21;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .danger-zone {
+            border: 1px solid #f8d7da;
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .danger-zone h4 {
+            color: #842029;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .danger-zone p {
+            color: #6b7f8e;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <!-- INLOG SCHERM -->
+        <div id="authContainer" class="auth-box">
+            <h2 id="authTitle">Inloggen Organisator</h2>
+            <p class="sub" style="margin-bottom:16px;">Beheer je evenementen, RSVP's en foto's</p>
+
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="E-mailadres" required>
+                <input type="password" id="authPassword" placeholder="Wachtwoord" required>
+                <button type="submit" class="btn-primary" id="authSubmitBtn">Inloggen</button>
+            </form>
+
+            <button class="btn-secondary" id="toggleAuthBtn" onclick="toggleAuthMode()">Nog geen account? Registreer
+                hier</button>
+        </div>
+
+        <!-- INGELOGD DASHBOARD -->
+        <div id="dashboardContainer" style="display: none;">
+            <div class="header-bar">
+                <div>
+                    <h1 id="dashboardTitle">Mijn Evenementen</h1>
+                    <p class="sub" id="dashboardSub">Live RSVP & Photo Dump Overzicht</p>
+                </div>
+                <button class="btn-logout" onclick="logout()">Uitloggen</button>
+            </div>
+
+            <!-- EVENT SELECTOR -->
+            <div id="eventSelectorContainer" class="event-selector-box" style="display:none;">
+                <label
+                    style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #5e626e; white-space: nowrap;">Kies
+                    Event:</label>
+                <select id="eventDropdown" onchange="switchEvent(this.value)"></select>
+                <button class="btn-add-event" onclick="showCreateEventForm()">+ Nieuw Event</button>
+            </div>
+
+            <!-- EVENT AANMAKEN FORMULIER -->
+            <div id="createEventBox" class="auth-box" style="display:none; margin-bottom:20px; text-align: left;">
+                <h2 style="text-align: center;">Nieuw Evenement Aanmaken</h2>
+                <p class="sub" style="text-align: center;">Kies een template en maak de uitnodigingspagina aan:</p>
+                <form id="createEventForm">
+                    <label
+                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Template
+                        / Event Type</label>
+                    <select id="templateType" required>
+                        <option value="wedding">💍 Bruiloft (Chic & Champagne)</option>
+                        <option value="babyshower">🍼 Babyshower (Soft & Pastel)</option>
+                        <option value="birthday">🎉 Verjaardag & Feest (Festive & Glam)</option>
+                    </select>
+
+                    <label
+                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Naam
+                        / Namen Organisator(en)</label>
+                    <input type="text" id="coupleNames" placeholder="bijv. Clara & Hugo of Lisa's Babyshower" required>
+
+                    <label
+                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Datum
+                        van het Event</label>
+                    <input type="date" id="eventDate" required>
+
+                    <label
+                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Unieke
+                        Link Slug</label>
+                    <input type="text" id="eventSlug" placeholder="bijv: clara-hugo of lisa-baby" required>
+
+                    <label
+                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event
+                        PIN / Toegangscode (Optioneel)</label>
+                    <input type="text" id="eventPin" placeholder="bijv: 1234 of FEEST (leeg = geen code)">
+
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button type="button" class="btn-secondary" style="flex:1;"
+                            onclick="cancelCreateEvent()">Annuleren</button>
+                        <button type="submit" class="btn-primary" style="flex:2; margin-top:0;">Event Opslaan</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ACTIVE EVENT DETAILS -->
+            <div id="activeEventContent" style="display:none;">
+
+                <!-- SHARE BANNER -->
+                <div class="share-banner">
+                    <h3>Digitale Uitnodiging Link</h3>
+                    <p>Stuur onderstaande link naar je gasten via WhatsApp:</p>
+                    <div class="share-input-group">
+                        <input type="text" id="inviteUrlInput" readonly>
+                        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
+                    </div>
+                    <button class="btn-wa" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
+                </div>
+
+                <!-- EVENT DETAILS EDIT FORM -->
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">Uitnodiging Details & Beveiliging</div>
+                    <form id="updateEventDetailsForm">
+                        <label
+                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Aanvangstijd</label>
+                        <input type="text" id="editEventTime" placeholder="bijv. 14:00 uur of Inloop vanaf 15:30">
+
+                        <label
+                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Locatie
+                            / Adres (Wordt afgeschermd met PIN)</label>
+                        <input type="text" id="editLocation" placeholder="bijv. Kasteel de Haar, Haarzuilens">
+
+                        <label
+                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event
+                            PIN / Toegangscode</label>
+                        <input type="text" id="editEventPin"
+                            placeholder="bijv: 1234 (Laat leeg als adres voor iedereen openbaar is)">
+
+                        <label
+                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Extra
+                            Bericht / Dresscode voor Gasten</label>
+                        <textarea id="editCustomMessage" rows="3"
+                            placeholder="bijv. Dresscode: Tenue de Ville. We vragen iedereen om uiterlijk 13:45 aanwezig te zijn."></textarea>
+
+                        <div class="toggle-group">
+                            <span style="font-size:12px; font-weight:600;">RSVP Aanmeldingen Openen</span>
+                            <label class="switch">
+                                <input type="checkbox" id="editRsvpOpen" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="margin-top:10px;">Details Opslaan</button>
+                    </form>
+                </div>
+
+                <!-- OMSLAGFOTO BEHEER -->
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">Uitnodiging Omslagfoto (Kraslaag)</div>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img id="currentCoverPreview"
+                            src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
+                            style="width:70px; height:70px; object-fit:cover; border-radius:14px; border:1px solid #ccc;">
+                        <div style="flex:1;">
+                            <input type="file" id="coverPhotoInput" accept="image/*" style="display:none;"
+                                onchange="uploadCoverPhoto(this)">
+                            <button type="button" class="btn-primary"
+                                onclick="document.getElementById('coverPhotoInput').click()">📷 Omslagfoto
+                                Wijzigen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATS -->
+                <div class="stats">
+                    <div class="stat-card"><span id="totalGuests">0</span><label>Totaal Reacties</label></div>
+                    <div class="stat-card"><span id="attendingGuests">0</span><label>Aanwezig</label></div>
+                    <div class="stat-card"><span id="declinedGuests">0</span><label>Afgezegd</label></div>
+                </div>
+
+                <!-- GASTENLIJST -->
+                <div>
+                    <div class="section-title">Gastenlijst</div>
+                    <table style="margin-bottom:24px;">
+                        <thead>
+                            <tr>
+                                <th>Gast</th>
+                                <th>Status</th>
+                                <th>Aantal</th>
+                                <th>Dieetwensen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rsvpTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center;">Laden...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FOTO DUMP OVERZICHT & DOWNLOAD -->
+                <div>
+                    <div class="photo-header">
+                        <div class="section-title" style="margin:0;">Geüploade Foto's van Gasten</div>
+                        <button class="btn-download-all" id="downloadPhotosBtn" onclick="downloadAllPhotosZIP()">📦
+                            Download Alle Foto's (.zip)</button>
+                    </div>
+                    <div class="photo-grid" id="photoGrid">
+                        <p style="font-size:12px; color:#6b7f8e;">Nog geen foto's ontvangen.</p>
+                    </div>
+                </div>
+
+                <!-- GEVARENZONE (VERWIJDEREN) -->
+                <div class="danger-zone">
+                    <h4>⚠️ Evenement Verwijderen</h4>
+                    <p>Het verwijderen van dit evenement wist alle gastenreacties, RSVP's en geüploade foto's permanent
+                        uit de database.</p>
+                    <button class="btn-danger" onclick="confirmDeleteEvent()">Evenement Verwijderen</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let isRegisterMode = false;
+        let currentUser = null;
+        let userEvents = [];
+        let currentEvent = null;
+        let currentPhotos = [];
+
+        async function checkUser() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('authTitle').innerText = isRegisterMode ? 'Account Registreren' : 'Inloggen Organisator';
+            document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'Registreren' : 'Inloggen';
+            document.getElementById('toggleAuthBtn').innerText = isRegisterMode ? 'Al een account? Log in' : 'Nog geen account? Registreer hier';
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+
+            if (isRegisterMode) {
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) alert(error.message);
+                else { alert('Account aangemaakt! Je bent direct ingelogd.'); checkUser(); }
+            } else {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) alert(error.message);
+                else checkUser();
+            }
+        });
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            location.reload();
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        async function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+
+            const { data: events, error } = await supabaseClient
+                .from('events')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            userEvents = events || [];
+
+            if (userEvents.length > 0) {
+                document.getElementById('eventSelectorContainer').style.display = 'flex';
+                document.getElementById('createEventBox').style.display = 'none';
+                document.getElementById('activeEventContent').style.display = 'block';
+
+                populateEventDropdown();
+                selectEvent(userEvents[0].id);
+            } else {
+                document.getElementById('eventSelectorContainer').style.display = 'none';
+                document.getElementById('createEventBox').style.display = 'block';
+                document.getElementById('activeEventContent').style.display = 'none';
+            }
+        }
+
+        function populateEventDropdown() {
+            const dropdown = document.getElementById('eventDropdown');
+            dropdown.innerHTML = '';
+            userEvents.forEach(evt => {
+                const opt = document.createElement('option');
+                opt.value = evt.id;
+                opt.innerText = `${evt.couple_names} (${evt.slug})`;
+                dropdown.appendChild(opt);
+            });
+        }
+
+        function switchEvent(eventId) {
+            selectEvent(eventId);
+        }
+
+        function selectEvent(eventId) {
+            currentEvent = userEvents.find(e => e.id === eventId);
+            if (!currentEvent) return;
+
+            document.getElementById('eventDropdown').value = currentEvent.id;
+            document.getElementById('dashboardTitle').innerText = currentEvent.couple_names;
+
+            const inviteUrl = `${window.location.origin}/?event=${currentEvent.slug}`;
+            document.getElementById('inviteUrlInput').value = inviteUrl;
+
+            document.getElementById('editEventTime').value = currentEvent.event_time || '';
+            document.getElementById('editLocation').value = currentEvent.location || '';
+            document.getElementById('editEventPin').value = currentEvent.event_pin || '';
+            document.getElementById('editCustomMessage').value = currentEvent.custom_message || '';
+            document.getElementById('editRsvpOpen').checked = currentEvent.rsvp_open !== false;
+
+            const defaultImg = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80';
+            document.getElementById('currentCoverPreview').src = currentEvent.cover_photo_url || defaultImg;
+
+            loadRSVPs();
+            loadPhotos();
+        }
+
+        document.getElementById('updateEventDetailsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentEvent) return;
+
+            const event_time = document.getElementById('editEventTime').value;
+            const location = document.getElementById('editLocation').value;
+            const event_pin = document.getElementById('editEventPin').value.trim();
+            const custom_message = document.getElementById('editCustomMessage').value;
+            const rsvp_open = document.getElementById('editRsvpOpen').checked;
+
+            const { error } = await supabaseClient
+                .from('events')
+                .update({ event_time, location, event_pin, custom_message, rsvp_open })
+                .eq('id', currentEvent.id);
+
+            if (error) {
+                alert('Fout bij opslaan: ' + error.message);
+            } else {
+                currentEvent.event_time = event_time;
+                currentEvent.location = location;
+                currentEvent.event_pin = event_pin;
+                currentEvent.custom_message = custom_message;
+                currentEvent.rsvp_open = rsvp_open;
+                alert('Details succesvol opgeslagen!');
+            }
+        });
+
+        function showCreateEventForm() {
+            document.getElementById('createEventBox').style.display = 'block';
+            document.getElementById('activeEventContent').style.display = 'none';
+        }
+
+        function cancelCreateEvent() {
+            if (userEvents.length > 0) {
+                document.getElementById('createEventBox').style.display = 'none';
+                document.getElementById('activeEventContent').style.display = 'block';
+            }
+        }
+
+        document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const couple_names = document.getElementById('coupleNames').value;
+            const event_date = document.getElementById('eventDate').value;
+            const slug = document.getElementById('eventSlug').value.toLowerCase().replace(/\s+/g, '-');
+            const template_type = document.getElementById('templateType').value;
+            const event_pin = document.getElementById('eventPin').value.trim();
+
+            const { data, error } = await supabaseClient.from('events').insert([
+                { couple_names, event_date, slug, template_type, event_pin, user_id: currentUser.id }
+            ]);
+
+            if (error) {
+                alert('Fout bij aanmaken: ' + error.message);
+            } else {
+                document.getElementById('createEventForm').reset();
+                showDashboard();
+            }
+        });
+
+        async function uploadCoverPhoto(input) {
+            if (!input.files || !input.files[0] || !currentEvent) return;
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+            const filePath = `covers/${currentEvent.slug}_${Date.now()}.${fileExt}`;
+
+            alert('Omslagfoto uploaden gestart...');
+
+            try {
+                const { error: storageError } = await supabaseClient
+                    .storage
+                    .from('event-photos')
+                    .upload(filePath, file);
+
+                if (storageError) throw storageError;
+
+                const { data: urlData } = supabaseClient
+                    .storage
+                    .from('event-photos')
+                    .getPublicUrl(filePath);
+
+                const coverPhotoUrl = urlData.publicUrl;
+
+                const { error: dbError } = await supabaseClient
+                    .from('events')
+                    .update({ cover_photo_url: coverPhotoUrl })
+                    .eq('id', currentEvent.id);
+
+                if (dbError) throw dbError;
+
+                currentEvent.cover_photo_url = coverPhotoUrl;
+                document.getElementById('currentCoverPreview').src = coverPhotoUrl;
+                alert('Omslagfoto succesvol bijgewerkt!');
+            } catch (err) {
+                alert('Fout bij uploaden omslagfoto: ' + err.message);
+            }
+        }
+
+        async function loadRSVPs() {
+            const { data } = await supabaseClient.from('rsvps').select('*').eq('event_id', currentEvent.id);
+            let total = (data || []).length, attending = 0, declined = 0;
+            const tbody = document.getElementById('rsvpTableBody');
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nog geen RSVP reacties ontvangen.</td></tr>';
+            } else {
+                data.forEach(item => {
+                    if (item.attending) attending += (parseInt(item.guest_count) || 1);
+                    else declined += 1;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                      <td><strong>${item.guest_name || 'Anoniem'}</strong></td>
+                      <td><span class="${item.attending ? 'badge-yes' : 'badge-no'}">${item.attending ? 'Ja' : 'Nee'}</span></td>
+                      <td>${item.attending ? (item.guest_count || 1) : '-'}</td>
+                      <td>${item.dietary_requirements || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('totalGuests').innerText = total;
+            document.getElementById('attendingGuests').innerText = attending;
+            document.getElementById('declinedGuests').innerText = declined;
+        }
+
+        async function loadPhotos() {
+            const { data } = await supabaseClient.from('photos').select('*').eq('event_id', currentEvent.id).order('created_at', { ascending: false });
+            currentPhotos = data || [];
+            const grid = document.getElementById('photoGrid');
+
+            if (currentPhotos.length > 0) {
+                grid.innerHTML = '';
+                currentPhotos.forEach(p => {
+                    const img = document.createElement('img');
+                    img.src = p.photo_url;
+                    grid.appendChild(img);
+                });
+            } else {
+                grid.innerHTML = '<p style="font-size:12px; color:#6b7f8e;">Nog geen foto\'s ontvangen.</p>';
+            }
+        }
+
+        // DOWNLOAD ALLE FOTO'S ALS ZIP
+        async function downloadAllPhotosZIP() {
+            if (!currentPhotos || currentPhotos.length === 0) {
+                alert("Er zijn nog geen foto's geüpload om te downloaden.");
+                return;
+            }
+
+            const btn = document.getElementById('downloadPhotosBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Inpakken (ZIP)...";
+            btn.disabled = true;
+
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder(`foto-dump-${currentEvent.slug}`);
+
+                for (let i = 0; i < currentPhotos.length; i++) {
+                    const url = currentPhotos[i].photo_url;
+                    const response = await fetch(url);
+                    const blob = await response.blob();
+                    folder.file(`foto_${i + 1}.jpg`, blob);
+                }
+
+                const content = await zip.generateAsync({ type: "blob" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `foto-dump-${currentEvent.slug}.zip`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (err) {
+                alert("Fout bij downloaden ZIP: " + err.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // EVENEMENT VERWIJDEREN (MET BEVEILIGINGS-POP-UPS)
+        async function confirmDeleteEvent() {
+            if (!currentEvent) return;
+
+            // Pop-up 1: Vraag of foto's gedownload zijn
+            if (currentPhotos && currentPhotos.length > 0) {
+                const downloaded = confirm(`⚠️ Heb je alle ${currentPhotos.length} geüploade foto's al gedownload?\n\nAls je nu doorgaat worden alle foto's permanent verwijderd! Klik op 'Annuleren' als je ze eerst wilt downloaden.`);
+                if (!downloaded) {
+                    downloadAllPhotosZIP();
+                    return;
+                }
+            }
+
+            // Pop-up 2: Definitieve bevestiging
+            const doubleCheck = confirm(`Weet je ECHT zeker dat je het evenement '${currentEvent.couple_names}' wilt verwijderen?\n\nDit kan NIET ongedaan worden gemaakt.`);
+            if (!doubleCheck) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('events')
+                    .delete()
+                    .eq('id', currentEvent.id);
+
+                if (error) throw error;
+
+                alert("Evenement succesvol verwijderd.");
+                showDashboard();
+            } catch (err) {
+                alert("Fout bij verwijderen: " + err.message);
+            }
+        }
+
+        function copyInviteUrl() {
+            const input = document.getElementById('inviteUrlInput');
+            input.select();
+            document.execCommand('copy');
+            alert('Link gekopieerd!');
+        }
+
+        function shareWhatsApp() {
+            const url = document.getElementById('inviteUrlInput').value;
+            const pinText = currentEvent.event_pin ? ` (Toegangscode: ${currentEvent.event_pin})` : '';
+            const text = encodeURIComponent(`Lieve familie en vrienden, bekijk onze uitnodiging${pinText} en laat weten of je erbij bent: ${url}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        checkUser();
+    </script>
+</body>
+
+</html>
