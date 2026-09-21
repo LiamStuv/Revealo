@@ -620,7 +620,7 @@
             christmas: {
                 subtitle: "🎄 Warmest Wishes • Kerstuitnodiging ❄️",
                 bgGradient: "linear-gradient(135deg, #051A10 0%, #0A2F1D 50%, #03120A 100%)",
-                accentColor: "#D42426", // Kerst Rood
+                accentColor: "#D42426",
                 defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
                 envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
@@ -865,6 +865,14 @@
                 const data = await response.json();
 
                 if (data.saveUrl) {
+                    // Optioneel: Registreer de gegenereerde Wallet Object ID in de database voor Push Notificaties
+                    const objectIdMatch = data.saveUrl.split('/').pop();
+                    if (objectIdMatch) {
+                        await supabaseClient.from('wallet_passes').insert([
+                            { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
+                        ]).catch(() => {}); // Vang op als de tabel optioneel is
+                    }
+
                     window.location.href = data.saveUrl;
                 } else {
                     alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
