@@ -9,9 +9,7 @@
     <!-- Premium Webfonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,6 +23,9 @@
             --accent-champagne: #cbb281;
             --font-title: 'Cinzel', serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --wax-bg: radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%);
+            --envelope-bg: linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%);
+            --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%);
         }
 
         * {
@@ -53,12 +54,13 @@
             height: 100vh;
             max-width: 420px;
             max-height: 880px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%);
+            background: var(--card-bg);
             backdrop-filter: blur(40px) saturate(190%);
             -webkit-backdrop-filter: blur(40px) saturate(190%);
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
         @media (min-width: 420px) {
@@ -76,7 +78,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%);
+            background: var(--envelope-bg);
             z-index: 20;
             cursor: pointer;
             display: flex;
@@ -95,7 +97,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px);
             overflow: hidden;
             display: flex;
@@ -121,9 +123,9 @@
             top: 44%;
             width: 64px;
             height: 64px;
-            background: radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%);
+            background: var(--wax-bg);
             border-radius: 50%;
-            box-shadow: 0 12px 24px rgba(138, 114, 70, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -132,6 +134,7 @@
             font-size: 18px;
             letter-spacing: 1px;
             z-index: 3;
+            transition: background 0.5s ease;
         }
 
         .tap-text {
@@ -144,6 +147,18 @@
             font-weight: 500;
         }
 
+        /* Snow Overlay for Christmas Theme */
+        #snowCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
         /* Brief Card Layout */
         .card-frame {
             min-height: 100%;
@@ -153,6 +168,8 @@
             align-items: center;
             justify-content: space-between;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .subtitle {
@@ -181,7 +198,7 @@
             font-weight: 500;
         }
 
-        /* Event Info Box (Locatie & Tijd) */
+        /* Event Info Box */
         .event-info-box {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
@@ -311,9 +328,9 @@
         }
 
         .btn-rsvp {
-            background: #1c1d21;
+            background: var(--text-main);
             color: #ffffff;
-            box-shadow: 0 8px 20px rgba(28, 29, 33, 0.25);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
 
         .btn-apple {
@@ -326,7 +343,7 @@
         .btn-google {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
-            color: #1c1d21;
+            color: var(--text-main);
             border: 1px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
@@ -345,7 +362,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(25px);
             z-index: 30;
             display: flex;
@@ -363,7 +380,7 @@
 
         .rsvp-form-box {
             width: 88%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(30px);
             padding: 28px 22px;
             border-radius: 28px;
@@ -400,7 +417,7 @@
             border-radius: 14px;
             font-size: 12px;
             font-family: var(--font-body);
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             color: var(--text-main);
             outline: none;
         }
@@ -414,7 +431,7 @@
         .btn-submit {
             flex: 2;
             padding: 12px;
-            background: #1c1d21;
+            background: var(--text-main);
             color: #fff;
             border: none;
             border-radius: 14px;
@@ -445,6 +462,9 @@
 
     <div class="app-container">
 
+        <!-- Snow overlay for Christmas theme -->
+        <canvas id="snowCanvas"></canvas>
+
         <!-- 1. Fullscreen Envelop Overlay -->
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <div class="envelope-card">
@@ -472,8 +492,7 @@
                 <div class="event-info-item" id="locationDisplay" style="display:none; margin-top:2px;">
                     <span>📍</span>
                     <span id="locationText" style="display:none;"></span>
-                    <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres
-                        te zien</button>
+                    <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres te zien</button>
                 </div>
 
                 <div class="custom-message-text" id="customMessageDisplay" style="display:none;"></div>
@@ -561,25 +580,54 @@
         let targetDate = new Date('2027-06-15T14:00:00').getTime();
         let expectedPin = null;
         let actualLocation = null;
+        let isChristmasTheme = false;
 
         const TEMPLATES = {
             wedding: {
                 subtitle: "Save The Date • Bruiloft",
                 bgGradient: "linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%)",
                 accentColor: "#cbb281",
-                defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
+                defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
             },
             babyshower: {
                 subtitle: "Je bent uitgenodigd! • Babyshower",
                 bgGradient: "linear-gradient(135deg, #2b3a42 0%, #3f525c 50%, #202b31 100%)",
                 accentColor: "#a3c4f3",
-                defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80"
+                defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 246, 250, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #edf4f8 0%, #d8e5ed 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #cbe3f7 0%, #a3c4f3 60%, #6893cb 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
             },
             birthday: {
                 subtitle: "Let's Celebrate! • Verjaardag",
                 bgGradient: "linear-gradient(135deg, #1f102e 0%, #32194a 50%, #130a1c 100%)",
                 accentColor: "#f72585",
-                defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80"
+                defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 240, 245, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #fdf0f6 0%, #f7d6e6 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff70a6 0%, #f72585 60%, #9e1053 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
+            },
+            // ULTIEM KERST THEMA
+            christmas: {
+                subtitle: "🎄 Warmest Wishes • Kerstuitnodiging ❄️",
+                bgGradient: "linear-gradient(135deg, #051A10 0%, #0A2F1D 50%, #03120A 100%)",
+                accentColor: "#D42426", // Kerst Rood
+                defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
+                envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff4d4d 0%, #d42426 60%, #7a0c0e 100%)",
+                textColor: "#0A2F1D",
+                textSubColor: "#51695A",
+                music: "https://cdn.pixabay.com/download/audio/2021/11/25/audio_24a2754685.mp3?filename=we-wish-you-a-merry-christmas-126685.mp3"
             }
         };
 
@@ -595,9 +643,26 @@
             if (data) {
                 const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.wedding;
 
+                if (data.template_type === 'christmas') {
+                    isChristmasTheme = true;
+                    document.getElementById('snowCanvas').style.display = 'block';
+                    initSnow();
+                    const bgAudio = document.getElementById('bgMusic');
+                    if (bgAudio && selectedTemplate.music) {
+                        bgAudio.src = selectedTemplate.music;
+                    }
+                }
+
                 const subElem = document.querySelector('.subtitle');
                 if (subElem) subElem.innerText = selectedTemplate.subtitle;
+                
                 document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
+                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
+                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
+                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
+                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
+                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
+                
                 document.body.style.background = selectedTemplate.bgGradient;
 
                 if (data.couple_names) {
@@ -619,7 +684,6 @@
                     updateCountdown();
                 }
 
-                // Tijd, Locatie & PIN Logica
                 let hasExtraInfo = false;
                 if (data.event_time) {
                     document.getElementById('timeText').innerText = data.event_time;
@@ -781,35 +845,34 @@
             }
         }
 
-       async function generateGoogleWalletPass() {
-    try {
-        const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+        async function generateGoogleWalletPass() {
+            try {
+                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
 
-        // Roep de Supabase Edge Function aan
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            },
-            body: JSON.stringify({
-                eventSlug: currentSlug || 'default',
-                guestName: guestName
-            })
-        });
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify({
+                        eventSlug: currentSlug || 'default',
+                        guestName: guestName,
+                        theme: isChristmasTheme ? 'christmas' : 'standard'
+                    })
+                });
 
-        const data = await response.json();
+                const data = await response.json();
 
-        if (data.saveUrl) {
-            // Stuur de gebruiker direct door naar de Google Wallet toevoegpagina
-            window.location.href = data.saveUrl;
-        } else {
-            alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+                if (data.saveUrl) {
+                    window.location.href = data.saveUrl;
+                } else {
+                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+                }
+            } catch (err) {
+                alert("Fout bij verbinden met server: " + err.message);
+            }
         }
-    } catch (err) {
-        alert("Fout bij verbinden met server: " + err.message);
-    }
-}
 
         function clickAppleWallet() {
             alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
@@ -837,23 +900,30 @@ END:VCALENDAR`;
             document.body.removeChild(link);
         }
 
+        // Scratch Canvas Initialization
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
 
         function initScratchLayer() {
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#ebd8b6');
-            gradient.addColorStop(0.5, '#cbb281');
-            gradient.addColorStop(1, '#93784a');
+            if (isChristmasTheme) {
+                gradient.addColorStop(0, '#f3e5ab');
+                gradient.addColorStop(0.5, '#d4af37');
+                gradient.addColorStop(1, '#aa7c11');
+            } else {
+                gradient.addColorStop(0, '#ebd8b6');
+                gradient.addColorStop(0.5, '#cbb281');
+                gradient.addColorStop(1, '#93784a');
+            }
 
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = isChristmasTheme ? '#0A2F1D' : '#ffffff';
             ctx.font = '600 8px Plus Jakarta Sans';
             ctx.textAlign = 'center';
-            ctx.fillText('SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 + 3);
+            ctx.fillText(isChristmasTheme ? '🎄 SCRATCH TO REVEAL ❄️' : 'SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 + 3);
         }
 
         function getPos(e) {
@@ -881,6 +951,7 @@ END:VCALENDAR`;
         canvas.addEventListener('touchend', () => isDrawing = false);
         initScratchLayer();
 
+        // Countdown Timer Logic
         function updateCountdown() {
             const now = new Date().getTime();
             const diff = targetDate - now;
@@ -900,6 +971,54 @@ END:VCALENDAR`;
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
+        // Realistische Sneeuw-Animatie voor het Kerstthema
+        function initSnow() {
+            const snowCanvas = document.getElementById('snowCanvas');
+            const snowCtx = snowCanvas.getContext('2d');
+            let width = snowCanvas.width = snowCanvas.offsetWidth;
+            let height = snowCanvas.height = snowCanvas.offsetHeight;
+
+            const numFlakes = 40;
+            const flakes = [];
+
+            for (let i = 0; i < numFlakes; i++) {
+                flakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2.5 + 1,
+                    d: Math.random() * 1 + 0.5,
+                    opacity: Math.random() * 0.7 + 0.3
+                });
+            }
+
+            function drawFlakes() {
+                snowCtx.clearRect(0, 0, width, height);
+                snowCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                snowCtx.beginPath();
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    snowCtx.moveTo(f.x, f.y);
+                    snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                }
+                snowCtx.fill();
+                moveFlakes();
+            }
+
+            function moveFlakes() {
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    f.y += Math.pow(f.d, 2) + 0.5;
+                    f.x += Math.sin(f.y / 20) * 0.5;
+
+                    if (f.y > height) {
+                        flakes[i] = { x: Math.random() * width, y: 0, r: f.r, d: f.d, opacity: f.opacity };
+                    }
+                }
+            }
+
+            setInterval(drawFlakes, 33);
+        }
     </script>
 </body>
 
