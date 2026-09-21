@@ -846,42 +846,45 @@
         }
 
         async function generateGoogleWalletPass() {
-            try {
-                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+    try {
+        const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
 
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({
-                        eventSlug: currentSlug || 'default',
-                        guestName: guestName,
-                        theme: isChristmasTheme ? 'christmas' : 'standard'
-                    })
-                });
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({
+                eventSlug: currentSlug || 'default',
+                guestName: guestName,
+                theme: isChristmasTheme ? 'christmas' : 'standard'
+            })
+        });
 
-                const data = await response.json();
+        const data = await response.json();
 
-                if (data.saveUrl) {
-                    // Optioneel: Registreer de gegenereerde Wallet Object ID in de database voor Push Notificaties
-                    const objectIdMatch = data.saveUrl.split('/').pop();
-                    if (objectIdMatch) {
-                        await supabaseClient.from('wallet_passes').insert([
-                            { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
-                        ]).catch(() => {}); // Vang op als de tabel optioneel is
-                    }
-
-                    window.location.href = data.saveUrl;
-                } else {
-                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+        if (data.saveUrl) {
+            // Optioneel: Registreer de gegenereerde Wallet Object ID in de database voor Push Notificaties
+            const objectIdMatch = data.saveUrl.split('/').pop();
+            if (objectIdMatch) {
+                try {
+                    await supabaseClient.from('wallet_passes').insert([
+                        { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
+                    ]);
+                } catch (dbErr) {
+                    console.log("Wallet pass database logging optioneel overgeslagen:", dbErr);
                 }
-            } catch (err) {
-                alert("Fout bij verbinden met server: " + err.message);
             }
-        }
 
+            window.location.href = data.saveUrl;
+        } else {
+            alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+        }
+    } catch (err) {
+        alert("Fout bij verbinden met server: " + err.message);
+    }
+}
         function clickAppleWallet() {
             alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
         }
