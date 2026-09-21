@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revelo Organiser Dashboard</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap"
-        rel="stylesheet">
+    <title>Revealo Organiser Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -122,6 +120,24 @@
             text-transform: uppercase;
             width: 100%;
             margin-top: 10px;
+        }
+
+        .btn-wallet-notif {
+            background: #4285F4;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
         .share-banner {
@@ -403,10 +419,10 @@
 <body>
 
     <div class="card">
-<!-- Bovenin de <div class="card"> van admin.html -->
-<div style="text-align: center; margin-bottom: 20px;">
-    <img src="logo.png" alt="Revealo Logo" style="width: 140px; height: auto;">
-</div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="logo.png" alt="Revealo Logo" style="width: 140px; height: auto;">
+        </div>
+
         <!-- INLOG SCHERM -->
         <div id="authContainer" class="auth-box">
             <h2 id="authTitle">Inloggen Organisator</h2>
@@ -418,8 +434,7 @@
                 <button type="submit" class="btn-primary" id="authSubmitBtn">Inloggen</button>
             </form>
 
-            <button class="btn-secondary" id="toggleAuthBtn" onclick="toggleAuthMode()">Nog geen account? Registreer
-                hier</button>
+            <button class="btn-secondary" id="toggleAuthBtn" onclick="toggleAuthMode()">Nog geen account? Registreer hier</button>
         </div>
 
         <!-- INGELOGD DASHBOARD -->
@@ -434,9 +449,7 @@
 
             <!-- EVENT SELECTOR -->
             <div id="eventSelectorContainer" class="event-selector-box" style="display:none;">
-                <label
-                    style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #5e626e; white-space: nowrap;">Kies
-                    Event:</label>
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #5e626e; white-space: nowrap;">Kies Event:</label>
                 <select id="eventDropdown" onchange="switchEvent(this.value)"></select>
                 <button class="btn-add-event" onclick="showCreateEventForm()">+ Nieuw Event</button>
             </div>
@@ -446,38 +459,28 @@
                 <h2 style="text-align: center;">Nieuw Evenement Aanmaken</h2>
                 <p class="sub" style="text-align: center;">Kies een template en maak de uitnodigingspagina aan:</p>
                 <form id="createEventForm">
-                    <label
-                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Template
-                        / Event Type</label>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Template / Event Type</label>
                     <select id="templateType" required>
                         <option value="wedding">💍 Bruiloft (Chic & Champagne)</option>
                         <option value="babyshower">🍼 Babyshower (Soft & Pastel)</option>
                         <option value="birthday">🎉 Verjaardag & Feest (Festive & Glam)</option>
+                        <option value="christmas">🎄 Kerst / Winter (Luxe Dennengroen)</option>
                     </select>
 
-                    <label
-                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Naam
-                        / Namen Organisator(en)</label>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Naam / Namen Organisator(en)</label>
                     <input type="text" id="coupleNames" placeholder="bijv. Clara & Hugo of Lisa's Babyshower" required>
 
-                    <label
-                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Datum
-                        van het Event</label>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Datum van het Event</label>
                     <input type="date" id="eventDate" required>
 
-                    <label
-                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Unieke
-                        Link Slug</label>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Unieke Link Slug</label>
                     <input type="text" id="eventSlug" placeholder="bijv: clara-hugo of lisa-baby" required>
 
-                    <label
-                        style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event
-                        PIN / Toegangscode (Optioneel)</label>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event PIN / Toegangscode (Optioneel)</label>
                     <input type="text" id="eventPin" placeholder="bijv: 1234 of FEEST (leeg = geen code)">
 
                     <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button type="button" class="btn-secondary" style="flex:1;"
-                            onclick="cancelCreateEvent()">Annuleren</button>
+                        <button type="button" class="btn-secondary" style="flex:1;" onclick="cancelCreateEvent()">Annuleren</button>
                         <button type="submit" class="btn-primary" style="flex:2; margin-top:0;">Event Opslaan</button>
                     </div>
                 </form>
@@ -501,26 +504,17 @@
                 <div class="auth-box" style="margin-bottom:24px; text-align:left;">
                     <div class="section-title" style="margin-top:0;">Uitnodiging Details & Beveiliging</div>
                     <form id="updateEventDetailsForm">
-                        <label
-                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Aanvangstijd</label>
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Aanvangstijd</label>
                         <input type="text" id="editEventTime" placeholder="bijv. 14:00 uur of Inloop vanaf 15:30">
 
-                        <label
-                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Locatie
-                            / Adres (Wordt afgeschermd met PIN)</label>
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Locatie / Adres (Wordt afgeschermd met PIN)</label>
                         <input type="text" id="editLocation" placeholder="bijv. Kasteel de Haar, Haarzuilens">
 
-                        <label
-                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event
-                            PIN / Toegangscode</label>
-                        <input type="text" id="editEventPin"
-                            placeholder="bijv: 1234 (Laat leeg als adres voor iedereen openbaar is)">
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event PIN / Toegangscode</label>
+                        <input type="text" id="editEventPin" placeholder="bijv: 1234 (Laat leeg als adres voor iedereen openbaar is)">
 
-                        <label
-                            style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Extra
-                            Bericht / Dresscode voor Gasten</label>
-                        <textarea id="editCustomMessage" rows="3"
-                            placeholder="bijv. Dresscode: Tenue de Ville. We vragen iedereen om uiterlijk 13:45 aanwezig te zijn."></textarea>
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Extra Bericht / Dresscode voor Gasten</label>
+                        <textarea id="editCustomMessage" rows="3" placeholder="bijv. Dresscode: Tenue de Ville. We vragen iedereen om uiterlijk 13:45 aanwezig te zijn."></textarea>
 
                         <div class="toggle-group">
                             <span style="font-size:12px; font-weight:600;">RSVP Aanmeldingen Openen</span>
@@ -534,19 +528,25 @@
                     </form>
                 </div>
 
+                <!-- GOOGLE WALLET PUSH NOTIFICATIE BROADCAST -->
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">📢 Stuur Google Wallet Pushnotificatie</div>
+                    <p style="font-size: 11px; color: #6b7f8e; margin-bottom: 12px;">Stuur direct een pushbericht naar het vergrendelscherm van alle gasten die de pas in hun Google Wallet hebben opgeslagen.</p>
+                    <input type="text" id="notifHeader" placeholder="Titel (bijv. Locatie gewijzigd! 🥳)">
+                    <textarea id="notifBody" rows="2" placeholder="Bericht (bijv. Het feest is verplaatst naar de grote zaal. Tot zo!)"></textarea>
+                    <button type="button" class="btn-wallet-notif" id="sendNotifBtn" onclick="sendWalletBroadcast()">
+                        🔔 Notificatie Versturen
+                    </button>
+                </div>
+
                 <!-- OMSLAGFOTO BEHEER -->
                 <div class="auth-box" style="margin-bottom:24px; text-align:left;">
                     <div class="section-title" style="margin-top:0;">Uitnodiging Omslagfoto (Kraslaag)</div>
                     <div style="display:flex; gap:12px; align-items:center;">
-                        <img id="currentCoverPreview"
-                            src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
-                            style="width:70px; height:70px; object-fit:cover; border-radius:14px; border:1px solid #ccc;">
+                        <img id="currentCoverPreview" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" style="width:70px; height:70px; object-fit:cover; border-radius:14px; border:1px solid #ccc;">
                         <div style="flex:1;">
-                            <input type="file" id="coverPhotoInput" accept="image/*" style="display:none;"
-                                onchange="uploadCoverPhoto(this)">
-                            <button type="button" class="btn-primary"
-                                onclick="document.getElementById('coverPhotoInput').click()">📷 Omslagfoto
-                                Wijzigen</button>
+                            <input type="file" id="coverPhotoInput" accept="image/*" style="display:none;" onchange="uploadCoverPhoto(this)">
+                            <button type="button" class="btn-primary" onclick="document.getElementById('coverPhotoInput').click()">📷 Omslagfoto Wijzigen</button>
                         </div>
                     </div>
                 </div>
@@ -582,8 +582,7 @@
                 <div>
                     <div class="photo-header">
                         <div class="section-title" style="margin:0;">Geüploade Foto's van Gasten</div>
-                        <button class="btn-download-all" id="downloadPhotosBtn" onclick="downloadAllPhotosZIP()">📦
-                            Download Alle Foto's (.zip)</button>
+                        <button class="btn-download-all" id="downloadPhotosBtn" onclick="downloadAllPhotosZIP()">📦 Download Alle Foto's (.zip)</button>
                     </div>
                     <div class="photo-grid" id="photoGrid">
                         <p style="font-size:12px; color:#6b7f8e;">Nog geen foto's ontvangen.</p>
@@ -593,8 +592,7 @@
                 <!-- GEVARENZONE (VERWIJDEREN) -->
                 <div class="danger-zone">
                     <h4>⚠️ Evenement Verwijderen</h4>
-                    <p>Het verwijderen van dit evenement wist alle gastenreacties, RSVP's en geüploade foto's permanent
-                        uit de database.</p>
+                    <p>Het verwijderen van dit evenement wist alle gastenreacties, RSVP's en geüploade foto's permanent uit de database.</p>
                     <button class="btn-danger" onclick="confirmDeleteEvent()">Evenement Verwijderen</button>
                 </div>
 
@@ -865,6 +863,66 @@
             }
         }
 
+        // VERSTUUR GOOGLE WALLET PUSHNOTIFICATIE
+        async function sendWalletBroadcast() {
+            const header = document.getElementById('notifHeader').value.trim();
+            const bodyText = document.getElementById('notifBody').value.trim();
+
+            if (!header || !bodyText) {
+                alert("Vul een titel en een bericht in voor de notificatie.");
+                return;
+            }
+
+            if (!currentEvent) return;
+
+            const btn = document.getElementById('sendNotifBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ Notificatie Versturen...";
+            btn.disabled = true;
+
+            try {
+                // Haal actieve wallet passes op van dit event
+                const { data: passes, error } = await supabaseClient
+                    .from('wallet_passes')
+                    .select('object_id')
+                    .eq('event_slug', currentEvent.slug);
+
+                if (error || !passes || passes.length === 0) {
+                    alert("Er zijn nog geen geregistreerde Google Wallet-passen gevonden voor dit evenement.");
+                    return;
+                }
+
+                let successCount = 0;
+
+                for (const pass of passes) {
+                    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-wallet-notification`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        },
+                        body: JSON.stringify({
+                            objectId: pass.object_id,
+                            header: header,
+                            bodyText: bodyText
+                        })
+                    });
+
+                    const resData = await response.json();
+                    if (resData.success) successCount++;
+                }
+
+                alert(`Success! Notificatie verzonden naar ${successCount} Wallet-pas(sen).`);
+                document.getElementById('notifHeader').value = '';
+                document.getElementById('notifBody').value = '';
+            } catch (err) {
+                alert("Fout bij het versturen van de notificatie: " + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
         // DOWNLOAD ALLE FOTO'S ALS ZIP
         async function downloadAllPhotosZIP() {
             if (!currentPhotos || currentPhotos.length === 0) {
@@ -907,7 +965,6 @@
         async function confirmDeleteEvent() {
             if (!currentEvent) return;
 
-            // Pop-up 1: Vraag of foto's gedownload zijn
             if (currentPhotos && currentPhotos.length > 0) {
                 const downloaded = confirm(`⚠️ Heb je alle ${currentPhotos.length} geüploade foto's al gedownload?\n\nAls je nu doorgaat worden alle foto's permanent verwijderd! Klik op 'Annuleren' als je ze eerst wilt downloaden.`);
                 if (!downloaded) {
@@ -916,7 +973,6 @@
                 }
             }
 
-            // Pop-up 2: Definitieve bevestiging
             const doubleCheck = confirm(`Weet je ECHT zeker dat je het evenement '${currentEvent.couple_names}' wilt verwijderen?\n\nDit kan NIET ongedaan worden gemaakt.`);
             if (!doubleCheck) return;
 
