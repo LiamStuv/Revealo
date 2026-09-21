@@ -781,9 +781,35 @@
             }
         }
 
-        async function generateGoogleWalletPass() {
-            alert("Aanroepen van de Google Wallet API met project ID: revelo-508809...");
+       async function generateGoogleWalletPass() {
+    try {
+        const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+
+        // Roep de Supabase Edge Function aan
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({
+                eventSlug: currentSlug || 'default',
+                guestName: guestName
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.saveUrl) {
+            // Stuur de gebruiker direct door naar de Google Wallet toevoegpagina
+            window.location.href = data.saveUrl;
+        } else {
+            alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
         }
+    } catch (err) {
+        alert("Fout bij verbinden met server: " + err.message);
+    }
+}
 
         function clickAppleWallet() {
             alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
