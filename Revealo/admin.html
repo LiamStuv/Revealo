@@ -3,1116 +3,951 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Revealo | Luxe Digitale Krasuitnodigingen</title>
-
-    <!-- Premium Webfonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Supabase JS Library -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revealo Organiser Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%);
-            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            --text-main: #1c1d21;
-            --text-sub: #5e626e;
-            --accent-champagne: #cbb281;
-            --font-title: 'Cinzel', serif;
-            --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --wax-bg: radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%);
-            --envelope-bg: linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%);
-            --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%);
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background: var(--bg-gradient);
-            font-family: var(--font-body);
-            min-height: 100vh;
-            color: var(--text-main);
-            transition: background 0.5s ease;
-        }
-
-        /* ---------------- LANDINGSPAGINA STYLES ---------------- */
-        #landingView {
-            display: none;
-            width: 100%;
-            min-height: 100vh;
-            color: #ffffff;
-            padding-bottom: 60px;
-        }
-
-        .landing-header {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 24px 20px;
+            background: #0b0c10;
+            color: #1c1d21;
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        .landing-logo {
-            width: 130px;
-            height: auto;
-        }
-
-        .btn-login {
-            background: transparent;
-            border: 1px solid var(--accent-champagne);
-            color: var(--accent-champagne);
-            padding: 10px 22px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            background: var(--accent-champagne);
-            color: #0b0c10;
-        }
-
-        .hero {
-            max-width: 900px;
-            margin: 50px auto 70px;
-            padding: 0 20px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-family: var(--font-title);
-            font-size: 2.6rem;
-            line-height: 1.25;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 span {
-            color: var(--accent-champagne);
-        }
-
-        .hero p {
-            font-size: 1.05rem;
-            color: #a0a5b5;
-            max-width: 620px;
-            margin: 0 auto 36px;
-            font-weight: 300;
-        }
-
-        .btn-cta {
-            display: inline-block;
-            background: linear-gradient(135deg, #e8d5b5 0%, #cbb281 100%);
-            color: #0b0c10;
-            padding: 16px 36px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(203, 178, 129, 0.3);
-            transition: transform 0.2s ease;
-        }
-
-        .btn-cta:hover {
-            transform: translateY(-2px);
-        }
-
-        .features-grid {
-            max-width: 1000px;
-            margin: 0 auto 80px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 28px 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .feature-card .icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .feature-card h3 {
-            font-family: var(--font-title);
-            color: var(--accent-champagne);
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            font-size: 0.85rem;
-            color: #a0a5b5;
-        }
-
-        .pricing-section {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 20px;
-            text-align: center;
-        }
-
-        .pricing-box {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
-            border: 1px solid var(--accent-champagne);
+        .card {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
             border-radius: 28px;
-            padding: 40px 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            height: fit-content;
         }
 
-        .price {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: var(--accent-champagne);
-            margin: 16px 0;
-        }
-
-        .price-list {
-            list-style: none;
-            text-align: left;
-            max-width: 320px;
-            margin: 0 auto 28px;
-            font-size: 0.9rem;
-            color: #d1d5db;
-        }
-
-        .price-list li {
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .price-list li::before {
-            content: "✓ ";
-            color: var(--accent-champagne);
-            font-weight: bold;
-        }
-
-        /* ---------------- UITNODIGING VIEW STYLES ---------------- */
-        #invitationView {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .app-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 420px;
-            max-height: 880px;
-            background: var(--card-bg);
-            backdrop-filter: blur(40px) saturate(190%);
-            -webkit-backdrop-filter: blur(40px) saturate(190%);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
-            overflow-y: auto;
-            overflow-x: hidden;
-            transition: background 0.5s ease;
-        }
-
-        @media (min-width: 420px) {
-            .app-container {
-                border-radius: 36px;
-                height: 740px;
-                border: 1px solid rgba(255, 255, 255, 0.5);
-            }
-        }
-
-        .envelope-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--envelope-bg);
-            z-index: 20;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
-        }
-
-        .envelope-wrapper.open {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .envelope-card {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .envelope-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 224, 214, 0.85) 100%);
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            z-index: 2;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .wax-seal {
-            position: absolute;
-            top: 44%;
-            width: 64px;
-            height: 64px;
-            background: var(--wax-bg);
-            border-radius: 50%;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: var(--font-title);
-            color: #ffffff;
-            font-size: 18px;
-            letter-spacing: 1px;
-            z-index: 3;
-            transition: background 0.5s ease;
-        }
-
-        .tap-text {
-            position: absolute;
-            bottom: 40px;
-            font-size: 10px;
-            letter-spacing: 3.5px;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        #snowCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-            display: none;
-        }
-
-        .card-frame {
-            min-height: 100%;
-            padding: 28px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .subtitle {
-            font-size: 9px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--accent-champagne);
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .names {
-            font-family: var(--font-title);
-            font-size: 28px;
-            color: var(--text-main);
-            font-weight: 500;
-            margin: 4px 0 2px 0;
-            letter-spacing: 1px;
-        }
-
-        .date {
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--text-sub);
-            font-weight: 500;
-        }
-
-        .event-info-box {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 12px 16px;
-            margin: 8px 0;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            width: 100%;
-            font-size: 11px;
-            color: var(--text-main);
-            line-height: 1.5;
-        }
-
-        .event-info-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-weight: 500;
-        }
-
-        .pin-unlock-btn {
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px dashed rgba(0, 0, 0, 0.2);
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-sub);
-            cursor: pointer;
-            margin-top: 4px;
-        }
-
-        .custom-message-text {
-            font-size: 11px;
-            font-style: italic;
-            color: var(--text-sub);
-            margin-top: 6px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding-top: 6px;
-        }
-
-        .scratch-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(255, 255, 255, 0.8);
-            margin: 6px 0;
-        }
-
-        .reveal-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        #scratchCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
-
-        .countdown-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .time-box {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 6px 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        }
-
-        .time-box span {
-            display: block;
-            font-family: var(--font-title);
-            font-size: 16px;
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .time-box label {
-            font-size: 7px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-sub);
-            font-weight: 600;
-        }
-
-        .btn-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 8px;
-            z-index: 2;
-        }
-
-        .action-btn {
-            width: 100%;
-            padding: 12px 0;
-            border: none;
-            border-radius: 22px;
-            font-size: 10px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-rsvp {
-            background: var(--text-main);
-            color: #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .btn-apple {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-google {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        }
-
-        .btn-calendar {
-            background: transparent;
-            color: var(--text-sub);
-            font-size: 9px;
-            padding: 4px 0;
-        }
-
-        .rsvp-modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(25px);
-            z-index: 30;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .rsvp-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .rsvp-form-box {
-            width: 88%;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(30px);
-            padding: 28px 22px;
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            text-align: left;
-        }
-
-        .rsvp-form-box h2 {
-            font-family: var(--font-title);
-            font-size: 20px;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .rsvp-form-box label {
-            display: block;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--accent-champagne);
-            font-weight: 600;
-            margin-top: 10px;
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
             margin-bottom: 4px;
         }
 
-        .rsvp-form-box input,
-        .rsvp-form-box select,
-        .rsvp-form-box textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 14px;
+        p.sub {
+            color: #6b7f8e;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
             font-size: 12px;
-            font-family: var(--font-body);
-            background: rgba(255, 255, 255, 0.7);
-            color: var(--text-main);
-            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8a7246;
+            font-weight: 700;
+            margin: 24px 0 12px 0;
         }
 
-        .modal-btns {
-            display: flex;
-            gap: 10px;
-            margin-top: 18px;
+        .auth-box {
+            background: #f7f5f0;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid #eae5dc;
+            text-align: center;
         }
 
-        .btn-submit {
-            flex: 2;
+        .auth-box h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .auth-box input,
+        .auth-box select,
+        .auth-box textarea {
+            width: 100%;
             padding: 12px;
-            background: var(--text-main);
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #1c1d21;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-google-login {
+            background: #ffffff;
+            color: #1c1d21;
+            border: 1px solid #ccc;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-google-login:hover {
+            background: #f0f0f0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 16px 0 6px 0;
+            color: #8a7246;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .divider:not(:empty)::before {
+            margin-right: .5em;
+        }
+
+        .divider:not(:empty)::after {
+            margin-left: .5em;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #6b7f8e;
+            border: none;
+            font-size: 11px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-danger {
+            background: #dc3545;
             color: #fff;
             border: none;
-            border-radius: 14px;
-            font-size: 10px;
-            letter-spacing: 1px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
             text-transform: uppercase;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-wallet-notif {
+            background: #4285F4;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-banner {
+            background: linear-gradient(135deg, #1c1d21 0%, #2a2c35 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+
+        .share-banner h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: #cbb281;
+            margin-bottom: 4px;
+        }
+
+        .share-banner p {
+            font-size: 12px;
+            color: #a0a5b5;
+            margin-bottom: 14px;
+        }
+
+        .share-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .share-input-group input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: monospace;
+        }
+
+        .btn-copy {
+            background: #cbb281;
+            color: #1c1d21;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-wa {
+            width: 100%;
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #eae5dc;
+            padding: 14px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card span {
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .stat-card label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #8a7246;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th {
+            padding: 10px;
+            background: #eae5dc;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badge-yes {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .badge-no {
+            background: #f8d7da;
+            color: #842029;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-download-all {
+            background: #1c1d21;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
         }
 
-        .btn-close {
-            flex: 1;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--text-main);
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-logout {
+            background: #f8d7da;
+            color: #842029;
             border: none;
-            border-radius: 14px;
-            font-size: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .event-selector-box {
+            background: #eae5dc;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .event-selector-box select {
+            margin-bottom: 0;
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .btn-add-event {
+            background: #8a7246;
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #1c1d21;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .danger-zone {
+            border: 1px solid #f8d7da;
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .danger-zone h4 {
+            color: #842029;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .danger-zone p {
+            color: #6b7f8e;
+            font-size: 11px;
+            margin-bottom: 12px;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- 1. LANDINGSPAGINA (Alleen zichtbaar op revealo.nl/) -->
-    <div id="landingView">
-        <div class="landing-header">
-            <img src="revealo_logo.jpg" alt="Revealo Logo" class="landing-logo">
-            <a href="admin.html" class="btn-login">Inloggen Organisator</a>
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="logo.png" alt="Revealo Logo" style="width: 140px; height: auto;">
         </div>
 
-        <section class="hero">
-            <h1>De Meest Exclusieve <span>Digitale Krasuitnodiging</span> voor jouw Evenement</h1>
-            <p>Verras je gasten met een interactieve kraslaag, live photo dump, PIN-beveiliging en een digitale pas voor hun Apple of Google Wallet.</p>
-            <a href="admin.html" class="btn-cta">Maak Gratis een Proefversie</a>
-        </section>
+        <div id="authContainer" class="auth-box">
+            <h2 id="authTitle">Inloggen Organisator</h2>
+            <p class="sub" style="margin-bottom:16px;">Beheer je evenementen, RSVP's en foto's</p>
 
-        <section class="features-grid">
-            <div class="feature-card">
-                <span class="icon">✨</span>
-                <h3>Magische Kraslaag</h3>
-                <p>Gasten krassen op hun telefoonscherm om de datum en foto te onthullen.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📷</span>
-                <h3>Live Photo Dump</h3>
-                <p>Verzamel na afloop alle foto's van je gasten direct in je eigen dashboard.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📲</span>
-                <h3>Digital Wallet Passes</h3>
-                <p>Gasten slaan de uitnodiging op in hun Google of Apple Wallet met live meldingen.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">🔒</span>
-                <h3>PIN Afscherming</h3>
-                <p>Scherm locaties of tijden veilig af met een unieke toegangscode.</p>
-            </div>
-        </section>
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="E-mailadres" required>
+                <input type="password" id="authPassword" placeholder="Wachtwoord" required>
+                <button type="submit" class="btn-primary" id="authSubmitBtn">Inloggen</button>
+            </form>
 
-        <section class="pricing-section">
-            <div class="pricing-box">
-                <h2 style="font-family: var(--font-title); font-size: 1.8rem;">Eén Vaste Prijs Per Event</h2>
-                <p style="color: #a0a5b5; font-size: 0.9rem;">Geen abonnement. Bouw gratis en betaal pas bij publicatie.</p>
-                <div class="price">TBA <span style="font-size:0.9rem; color:#a0a5b5; font-weight:normal;">/ per event</span></div>
-                <ul class="price-list">
-                    <li>Onbeperkt aantal gasten & RSVP's</li>
-                    <li>Keuze uit alle luxe thema's</li>
-                    <li>Photo Dump verzamelen & ZIP Download</li>
-                    <li>Google Wallet & Apple Wallet Passes</li>
-                    <li>Onbeperkt Pushnotificaties versturen</li>
-                </ul>
-                <a href="admin.html" class="btn-cta">Start Direct</a>
-            </div>
-        </footer>
-    </div>
+            <div class="divider">of</div>
 
-    <!-- 2. UITNODIGING VIEW (Zichtbaar bij ?event=slug of ?preview=true) -->
-    <div id="invitationView">
-        <div class="app-container">
-            <canvas id="snowCanvas"></canvas>
+            <button type="button" class="btn-google-login" onclick="loginWithGoogle()">
+                <svg width="18" height="18" viewBox="0 0 18 18">
+                    <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+                    <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                    <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                    <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                </svg>
+                Inloggen met Google
+            </button>
 
-            <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
-                <div class="envelope-card">
-                    <div class="envelope-flap"></div>
-                    <div class="wax-seal" id="sealInitials">C&H</div>
-                    <div class="tap-text">Tap to open</div>
-                </div>
-            </div>
+            <button class="btn-secondary" id="toggleAuthBtn" onclick="toggleAuthMode()">Nog geen account? Registreer hier</button>
+        </div>
 
-            <div class="card-frame">
+        <div id="dashboardContainer" style="display: none;">
+            <div class="header-bar">
                 <div>
-                    <p class="subtitle">Save The Date</p>
-                    <h1 class="names" id="coupleNamesHeading">Clara & Hugo</h1>
-                    <p class="date" id="eventDateText">15 June 2027</p>
+                    <h1 id="dashboardTitle">Mijn Evenementen</h1>
+                    <p class="sub" id="dashboardSub">Live RSVP & Photo Dump Overzicht</p>
                 </div>
-
-                <div class="event-info-box" id="eventInfoBox" style="display:none;">
-                    <div class="event-info-item" id="timeDisplay" style="display:none;">
-                        <span>🕒</span> <span id="timeText"></span>
-                    </div>
-
-                    <div class="event-info-item" id="locationDisplay" style="display:none; margin-top:2px;">
-                        <span>📍</span>
-                        <span id="locationText" style="display:none;"></span>
-                        <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres te zien</button>
-                    </div>
-
-                    <div class="custom-message-text" id="customMessageDisplay" style="display:none;"></div>
-                </div>
-
-                <div class="scratch-container">
-                    <img class="reveal-photo"
-                        src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
-                        alt="Omslagfoto">
-                    <canvas id="scratchCanvas" width="140" height="140"></canvas>
-                </div>
-
-                <div class="countdown-grid">
-                    <div class="time-box"><span id="days">0</span><label>Days</label></div>
-                    <div class="time-box"><span id="hours">0</span><label>Hours</label></div>
-                    <div class="time-box"><span id="mins">0</span><label>Mins</label></div>
-                    <div class="time-box"><span id="secs">0</span><label>Secs</label></div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="action-btn btn-rsvp" id="rsvpBtn" onclick="openRSVP()">
-                        ✉️ RSVP Doorgeven
-                    </button>
-                    <button class="action-btn btn-google" onclick="openPhotoUpload()">
-                        📷 Foto Uploaden
-                    </button>
-                    <button class="action-btn btn-apple" onclick="clickAppleWallet()">
-                         Add to Apple Wallet
-                    </button>
-                    <button class="action-btn btn-google" onclick="generateGoogleWalletPass()">
-                        G Add to Google Wallet
-                    </button>
-                    <button class="action-btn btn-calendar" onclick="downloadCalendar()">
-                        📅 Add to Calendar (.ics)
-                    </button>
-                </div>
-
-                <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+                <button class="btn-logout" onclick="logout()">Uitloggen</button>
             </div>
 
-            <div class="rsvp-modal" id="rsvpModal">
-                <div class="rsvp-form-box">
-                    <h2>Aanwezigheid</h2>
-                    <form id="rsvpForm">
-                        <label for="guestName">Jouw Naam / Namen</label>
-                        <input type="text" id="guestName" required placeholder="bijv. Jan & Lisa">
+            <div id="eventSelectorContainer" class="event-selector-box" style="display:none;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #5e626e; white-space: nowrap;">Kies Event:</label>
+                <select id="eventDropdown" onchange="switchEvent(this.value)"></select>
+                <button class="btn-add-event" onclick="showCreateEventForm()">+ Nieuw Event</button>
+            </div>
 
-                        <label for="attending">Ben je erbij?</label>
-                        <select id="attending">
-                            <option value="true">Ja, ik/wij zijn erbij!</option>
-                            <option value="false">Helaas, verhinderd</option>
-                        </select>
+            <div id="createEventBox" class="auth-box" style="display:none; margin-bottom:20px; text-align: left;">
+                <h2 style="text-align: center;">Nieuw Evenement Aanmaken</h2>
+                <p class="sub" style="text-align: center;">Kies een template, stel je details in en bekijk gratis een preview:</p>
+                <form id="createEventForm">
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Template / Event Type</label>
+                    <select id="templateType" required>
+                        <option value="wedding">💍 Bruiloft (Chic & Champagne)</option>
+                        <option value="babyshower">🍼 Babyshower (Soft & Pastel)</option>
+                        <option value="birthday">🎉 Verjaardag & Feest (Festive & Glam)</option>
+                        <option value="christmas">🎄 Kerst / Winter (Luxe Dennengroen)</option>
+                    </select>
 
-                        <label for="guestCount">Aantal personen</label>
-                        <input type="number" id="guestCount" value="1" min="1" max="5">
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Naam / Namen Organisator(en)</label>
+                    <input type="text" id="coupleNames" placeholder="bijv. Clara & Hugo of Lisa's Babyshower" required>
 
-                        <label for="dietary">Dieetwensen / Opmerkingen</label>
-                        <textarea id="dietary" rows="2" placeholder="Vegetarisch, allergieën..."></textarea>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Datum van het Event</label>
+                    <input type="date" id="eventDate" required>
 
-                        <div class="modal-btns">
-                            <button type="button" class="btn-close" onclick="closeRSVP()">Annuleren</button>
-                            <button type="submit" class="btn-submit" id="submitBtn">Versturen</button>
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Omslagfoto voor op Uitnodiging (Kraslaag)</label>
+                    <input type="file" id="createCoverPhotoInput" accept="image/*">
+
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Unieke Link Slug</label>
+                    <input type="text" id="eventSlug" placeholder="bijv: clara-hugo of lisa-baby" required>
+
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event PIN / Toegangscode (Optioneel)</label>
+                    <input type="text" id="eventPin" placeholder="bijv: 1234 of FEEST (leeg = geen code)">
+
+                    <button type="button" class="btn-primary" style="background: #8a7246; margin-top: 12px; margin-bottom: 6px;" onclick="previewNewEvent()">👁️ Live Preview Bekijken (Gratis)</button>
+
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button type="button" class="btn-secondary" style="flex:1;" onclick="cancelCreateEvent()">Annuleren</button>
+                        <button type="submit" class="btn-primary" style="flex:2; margin-top:0;">Event Opslaan (1 Credit)</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="activeEventContent" style="display:none;">
+
+                <div class="share-banner">
+                    <h3>Digitale Uitnodiging Link</h3>
+                    <p>Stuur onderstaande link naar je gasten via WhatsApp of bekijk eerst een voorbeeld:</p>
+                    <div class="share-input-group">
+                        <input type="text" id="inviteUrlInput" readonly>
+                        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="btn-wa" style="flex:2;" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
+                        <button type="button" style="flex:1; background: #8a7246; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 600; font-size: 11px; cursor: pointer;" onclick="openPreviewMode()">👁️ Bekijk Preview</button>
+                    </div>
+                </div>
+
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">Uitnodiging Details & Beveiliging</div>
+                    <form id="updateEventDetailsForm">
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Aanvangstijd</label>
+                        <input type="text" id="editEventTime" placeholder="bijv. 14:00 uur of Inloop vanaf 15:30">
+
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Locatie / Adres (Wordt afgeschermd met PIN)</label>
+                        <input type="text" id="editLocation" placeholder="bijv. Kasteel de Haar, Haarzuilens">
+
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event PIN / Toegangscode</label>
+                        <input type="text" id="editEventPin" placeholder="bijv: 1234 (Laat leeg als adres voor iedereen openbaar is)">
+
+                        <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Extra Bericht / Dresscode voor Gasten</label>
+                        <textarea id="editCustomMessage" rows="3" placeholder="bijv. Dresscode: Tenue de Ville. We vragen iedereen om uiterlijk 13:45 aanwezig te zijn."></textarea>
+
+                        <div class="toggle-group">
+                            <span style="font-size:12px; font-weight:600;">RSVP Aanmeldingen Openen</span>
+                            <label class="switch">
+                                <input type="checkbox" id="editRsvpOpen" checked>
+                                <span class="slider"></span>
+                            </label>
                         </div>
+
+                        <button type="submit" class="btn-primary" style="margin-top:10px;">Details Opslaan</button>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <audio id="bgMusic"
-        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-112191.mp3"
-        loop></audio>
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">📢 Stuur Google Wallet Pushnotificatie</div>
+                    <p style="font-size: 11px; color: #6b7f8e; margin-bottom: 12px;">Stuur direct een pushbericht naar het vergrendelscherm van alle gasten die de pas in hun Google Wallet hebben opgeslagen.</p>
+                    <input type="text" id="notifHeader" placeholder="Titel (bijv. Locatie gewijzigd! 🥳)">
+                    <textarea id="notifBody" rows="2" placeholder="Bericht (bijv. Het feest is verplaatst naar de grote zaal. Tot zo!)"></textarea>
+                    <button type="button" class="btn-wallet-notif" id="sendNotifBtn" onclick="sendWalletBroadcast()">
+                        🔔 Notificatie Versturen
+                    </button>
+                </div>
+
+                <div class="auth-box" style="margin-bottom:24px; text-align:left;">
+                    <div class="section-title" style="margin-top:0;">Uitnodiging Omslagfoto (Kraslaag)</div>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img id="currentCoverPreview" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" style="width:70px; height:70px; object-fit:cover; border-radius:14px; border:1px solid #ccc;">
+                        <div style="flex:1;">
+                            <input type="file" id="coverPhotoInput" accept="image/*" style="display:none;" onchange="uploadCoverPhoto(this)">
+                            <button type="button" class="btn-primary" onclick="document.getElementById('coverPhotoInput').click()">📷 Omslagfoto Wijzigen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card"><span id="totalGuests">0</span><label>Totaal Reacties</label></div>
+                    <div class="stat-card"><span id="attendingGuests">0</span><label>Aanwezig</label></div>
+                    <div class="stat-card"><span id="declinedGuests">0</span><label>Afgezegd</label></div>
+                </div>
+
+                <div>
+                    <div class="section-title">Gastenlijst</div>
+                    <table style="margin-bottom:24px;">
+                        <thead>
+                            <tr>
+                                <th>Gast</th>
+                                <th>Status</th>
+                                <th>Aantal</th>
+                                <th>Dieetwensen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rsvpTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center;">Laden...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="photo-header">
+                        <div class="section-title" style="margin:0;">Geüploade Foto's van Gasten</div>
+                        <button class="btn-download-all" id="downloadPhotosBtn" onclick="downloadAllPhotosZIP()">📦 Download Alle Foto's (.zip)</button>
+                    </div>
+                    <div class="photo-grid" id="photoGrid">
+                        <p style="font-size:12px; color:#6b7f8e;">Nog geen foto's ontvangen.</p>
+                    </div>
+                </div>
+
+                <div class="danger-zone">
+                    <h4>⚠️ Evenement Verwijderen</h4>
+                    <p>Het verwijderen van dit evenement wist alle gastenreacties, RSVP's en geüploade foto's permanent uit de database.</p>
+                    <button class="btn-danger" onclick="confirmDeleteEvent()">Evenement Verwijderen</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <script>
         const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentSlug = urlParams.get('event');
-        const isPreview = urlParams.get('preview') === 'true';
+        let isRegisterMode = false;
+        let currentUser = null;
+        let userEvents = [];
+        let currentEvent = null;
+        let currentPhotos = [];
 
-        // SLIMME SCHERM ROUTING
-        if (currentSlug || isPreview) {
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('invitationView').style.display = 'flex';
-        } else {
-            document.getElementById('landingView').style.display = 'block';
-            document.getElementById('invitationView').style.display = 'none';
-        }
-
-        let targetDate = new Date('2027-06-15T14:00:00').getTime();
-        let expectedPin = null;
-        let actualLocation = null;
-        let isChristmasTheme = false;
-
-        if (isPreview) {
-            window.addEventListener('DOMContentLoaded', () => {
-                const previewBanner = document.createElement('div');
-                previewBanner.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    background: linear-gradient(90deg, #dc3545, #8a7246);
-                    color: white;
-                    text-align: center;
-                    padding: 8px 10px;
-                    font-weight: bold;
-                    font-size: 11px;
-                    z-index: 99999;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-                    letter-spacing: 0.5px;
-                `;
-                previewBanner.innerHTML = '⚠️ PROEFVERSIE PREVIEW | RSVPs, Foto Dump & Wallet-passen zijn uitgeschakeld';
-                document.body.prepend(previewBanner);
-            });
-        }
-
-        const TEMPLATES = {
-            wedding: {
-                subtitle: "Save The Date • Bruiloft",
-                bgGradient: "linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%)",
-                accentColor: "#cbb281",
-                defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
-                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%)",
-                textColor: "#1c1d21",
-                textSubColor: "#5e626e"
-            },
-            babyshower: {
-                subtitle: "Je bent uitgenodigd! • Babyshower",
-                bgGradient: "linear-gradient(135deg, #2b3a42 0%, #3f525c 50%, #202b31 100%)",
-                accentColor: "#a3c4f3",
-                defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80",
-                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 246, 250, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #edf4f8 0%, #d8e5ed 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #cbe3f7 0%, #a3c4f3 60%, #6893cb 100%)",
-                textColor: "#1c1d21",
-                textSubColor: "#5e626e"
-            },
-            birthday: {
-                subtitle: "Let's Celebrate! • Verjaardag",
-                bgGradient: "linear-gradient(135deg, #1f102e 0%, #32194a 50%, #130a1c 100%)",
-                accentColor: "#f72585",
-                defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80",
-                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 240, 245, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #fdf0f6 0%, #f7d6e6 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #ff70a6 0%, #f72585 60%, #9e1053 100%)",
-                textColor: "#1c1d21",
-                textSubColor: "#5e626e"
-            },
-            christmas: {
-                subtitle: "🎄 Warmest Wishes • Kerstuitnodiging ❄️",
-                bgGradient: "linear-gradient(135deg, #051A10 0%, #0A2F1D 50%, #03120A 100%)",
-                accentColor: "#D42426",
-                defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
-                cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
-                envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #ff4d4d 0%, #d42426 60%, #7a0c0e 100%)",
-                textColor: "#0A2F1D",
-                textSubColor: "#51695A",
-                music: "https://cdn.pixabay.com/download/audio/2021/11/25/audio_24a2754685.mp3?filename=we-wish-you-a-merry-christmas-126685.mp3"
-            }
-        };
-
-        async function fetchEventDetails() {
-            const tempTemplate = urlParams.get('template');
-            const tempNames = urlParams.get('names');
-            const tempDate = urlParams.get('date');
-            const tempCover = urlParams.get('cover');
-
-            if (isPreview && tempTemplate) {
-                const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.wedding;
-                
-                if (tempTemplate === 'christmas') {
-                    isChristmasTheme = true;
-                    document.getElementById('snowCanvas').style.display = 'block';
-                    initSnow();
-                }
-
-                document.querySelector('.subtitle').innerText = selectedTemplate.subtitle;
-                document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
-                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
-                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
-                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
-                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
-                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
-                document.body.style.background = selectedTemplate.bgGradient;
-
-                if (tempNames) {
-                    document.getElementById('coupleNamesHeading').innerText = tempNames;
-                    const namesArr = tempNames.split('&').map(n => n.trim());
-                    if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
-                        document.getElementById('sealInitials').innerText = `${namesArr[0][0]}&${namesArr[1][0]}`;
-                    } else {
-                        document.getElementById('sealInitials').innerText = tempNames.substring(0, 2).toUpperCase();
-                    }
-                }
-
-                if (tempDate) {
-                    const eventDateObj = new Date(tempDate);
-                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
-                    targetDate = eventDateObj.getTime();
-                    updateCountdown();
-                }
-
-                const revealImg = document.querySelector('.reveal-photo');
-                if (revealImg) {
-                    revealImg.src = (tempCover && tempCover !== '') ? tempCover : selectedTemplate.defaultImage;
-                }
-
-                return;
-            }
-
-            if (!currentSlug) return;
-
-            const { data } = await supabaseClient
-                .from('events')
-                .select('*')
-                .eq('slug', currentSlug)
-                .maybeSingle();
-
-            if (data) {
-                const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.wedding;
-
-                if (data.template_type === 'christmas') {
-                    isChristmasTheme = true;
-                    document.getElementById('snowCanvas').style.display = 'block';
-                    initSnow();
-                    const bgAudio = document.getElementById('bgMusic');
-                    if (bgAudio && selectedTemplate.music) {
-                        bgAudio.src = selectedTemplate.music;
-                    }
-                }
-
-                const subElem = document.querySelector('.subtitle');
-                if (subElem) subElem.innerText = selectedTemplate.subtitle;
-                
-                document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
-                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
-                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
-                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
-                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
-                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
-                
-                document.body.style.background = selectedTemplate.bgGradient;
-
-                if (data.couple_names) {
-                    document.getElementById('coupleNamesHeading').innerText = data.couple_names;
-                    const namesArr = data.couple_names.split('&').map(n => n.trim());
-                    if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
-                        document.getElementById('sealInitials').innerText = `${namesArr[0][0]}&${namesArr[1][0]}`;
-                    } else if (data.couple_names.length >= 2) {
-                        document.getElementById('sealInitials').innerText = data.couple_names.substring(0, 2).toUpperCase();
-                    }
-                }
-
-                if (data.event_date) {
-                    const eventDateObj = new Date(data.event_date);
-                    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', options);
-
-                    targetDate = eventDateObj.getTime();
-                    updateCountdown();
-                }
-
-                let hasExtraInfo = false;
-                if (data.event_time) {
-                    document.getElementById('timeText').innerText = data.event_time;
-                    document.getElementById('timeDisplay').style.display = 'flex';
-                    hasExtraInfo = true;
-                }
-
-                if (data.location) {
-                    actualLocation = data.location;
-                    expectedPin = data.event_pin;
-                    document.getElementById('locationDisplay').style.display = 'flex';
-                    hasExtraInfo = true;
-
-                    if (expectedPin && expectedPin.trim() !== '') {
-                        document.getElementById('pinUnlockBtn').style.display = 'inline-block';
-                        document.getElementById('locationText').style.display = 'none';
-                    } else {
-                        unlockLocation();
-                    }
-                }
-
-                if (data.custom_message) {
-                    document.getElementById('customMessageDisplay').innerText = data.custom_message;
-                    document.getElementById('customMessageDisplay').style.display = 'block';
-                    hasExtraInfo = true;
-                }
-
-                if (hasExtraInfo) {
-                    document.getElementById('eventInfoBox').style.display = 'block';
-                }
-
-                if (data.rsvp_open === false) {
-                    document.getElementById('rsvpBtn').style.display = 'none';
-                } else {
-                    document.getElementById('rsvpBtn').style.display = 'flex';
-                }
-
-                const revealImg = document.querySelector('.reveal-photo');
-                if (revealImg) {
-                    revealImg.src = data.cover_photo_url || selectedTemplate.defaultImage;
-                }
-            }
-        }
-        fetchEventDetails();
-
-        function promptPinCode() {
-            const inputPin = prompt("Voer de PIN-code van de uitnodiging in:");
-            if (inputPin && inputPin.trim().toLowerCase() === expectedPin.trim().toLowerCase()) {
-                unlockLocation();
-            } else if (inputPin !== null) {
-                alert("Onjuiste PIN-code. Vraag de code op bij de organisator.");
+        async function checkUser() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                showDashboard();
+            } else {
+                showAuth();
             }
         }
 
-        function unlockLocation() {
-            const locElem = document.getElementById('locationText');
-            locElem.innerText = actualLocation;
-            locElem.style.display = 'inline';
-            const btn = document.getElementById('pinUnlockBtn');
-            if (btn) btn.style.display = 'none';
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('authTitle').innerText = isRegisterMode ? 'Account Registreren' : 'Inloggen Organisator';
+            document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'Registreren' : 'Inloggen';
+            document.getElementById('toggleAuthBtn').innerText = isRegisterMode ? 'Al een account? Log in' : 'Nog geen account? Registreer hier';
         }
 
-        function openEnvelope() {
-            document.getElementById('envelope').classList.add('open');
-            const music = document.getElementById('bgMusic');
-            music.play().catch(() => { });
-        }
-
-        function openRSVP() { document.getElementById('rsvpModal').classList.add('active'); }
-        function closeRSVP() { document.getElementById('rsvpModal').classList.remove('active'); }
-
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
 
-            if (isPreview) {
-                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om echte RSVP-aanmeldingen van gasten te ontvangen!");
-                return;
-            }
-
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = 'Verzenden...';
-            btn.disabled = true;
-
-            const guest_name = document.getElementById('guestName').value;
-            const attending = document.getElementById('attending').value === 'true';
-            const guest_count = parseInt(document.getElementById('guestCount').value);
-            const dietary_requirements = document.getElementById('dietary').value;
-
-            try {
-                let resolvedEventId = null;
-                if (currentSlug) {
-                    const { data: eventData } = await supabaseClient
-                        .from('events')
-                        .select('id')
-                        .eq('slug', currentSlug)
-                        .maybeSingle();
-
-                    if (eventData) resolvedEventId = eventData.id;
-                }
-
-                const { error } = await supabaseClient.from('rsvps').insert([
-                    { guest_name, attending, guest_count, dietary_requirements, event_id: resolvedEventId }
-                ]);
-
-                if (error) throw error;
-
-                alert('Bedankt! Je RSVP is succesvol ontvangen.');
-                closeRSVP();
-                document.getElementById('rsvpForm').reset();
-            } catch (err) {
-                alert('Er ging iets mis met opslaan: ' + err.message);
-            } finally {
-                btn.innerText = 'Versturen';
-                btn.disabled = false;
+            if (isRegisterMode) {
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) alert(error.message);
+                else { alert('Account aangemaakt! Je bent direct ingelogd.'); checkUser(); }
+            } else {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) alert(error.message);
+                else checkUser();
             }
         });
 
-        function openPhotoUpload() {
-            if (isPreview) {
-                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
-                return;
-            }
-            document.getElementById('photoInput').click();
+        // INLOGGEN MET GOOGLE
+        async function loginWithGoogle() {
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/admin.html`
+                }
+            });
+            if (error) alert("Fout bij inloggen met Google: " + error.message);
         }
 
-        async function uploadPhoto(input) {
-            if (!input.files || !input.files[0]) return;
+        async function logout() {
+            sessionStorage.clear();
+            await supabaseClient.auth.signOut();
+            location.reload();
+        }
 
-            if (isPreview) {
-                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        async function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+
+            const impersonateUserId = sessionStorage.getItem('impersonate_user_id');
+            const targetUserId = impersonateUserId || currentUser.id;
+
+            if (impersonateUserId) {
+                let banner = document.getElementById('impersonateBanner');
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'impersonateBanner';
+                    banner.style.cssText = 'background: #dc3545; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 12px; border-radius: 12px; margin-bottom: 15px;';
+                    document.getElementById('dashboardContainer').prepend(banner);
+                }
+                banner.innerHTML = `🎭 IMPERSONATE MODE ACTIEF | <a href="#" onclick="exitImpersonate()" style="color:white; text-decoration:underline;">Stop Impersonating & Terug naar Super Admin</a>`;
+            }
+
+            const { data: events, error } = await supabaseClient
+                .from('events')
+                .select('*')
+                .eq('user_id', targetUserId)
+                .order('created_at', { ascending: false });
+
+            userEvents = events || [];
+
+            if (userEvents.length > 0) {
+                document.getElementById('eventSelectorContainer').style.display = 'flex';
+                document.getElementById('createEventBox').style.display = 'none';
+                document.getElementById('activeEventContent').style.display = 'block';
+
+                populateEventDropdown();
+                
+                const impersonateEventId = sessionStorage.getItem('impersonate_event_id');
+                const selectedId = (impersonateEventId && userEvents.some(e => e.id === impersonateEventId)) ? impersonateEventId : userEvents[0].id;
+                selectEvent(selectedId);
+            } else {
+                document.getElementById('eventSelectorContainer').style.display = 'none';
+                document.getElementById('createEventBox').style.display = 'block';
+                document.getElementById('activeEventContent').style.display = 'none';
+            }
+        }
+
+        function exitImpersonate() {
+            sessionStorage.removeItem('impersonate_user_id');
+            sessionStorage.removeItem('impersonate_event_id');
+            window.location.href = "superadmin.html";
+        }
+
+        function populateEventDropdown() {
+            const dropdown = document.getElementById('eventDropdown');
+            dropdown.innerHTML = '';
+            userEvents.forEach(evt => {
+                const opt = document.createElement('option');
+                opt.value = evt.id;
+                opt.innerText = `${evt.couple_names} (${evt.slug})`;
+                dropdown.appendChild(opt);
+            });
+        }
+
+        function switchEvent(eventId) {
+            selectEvent(eventId);
+        }
+
+        function selectEvent(eventId) {
+            currentEvent = userEvents.find(e => e.id === eventId);
+            if (!currentEvent) return;
+
+            document.getElementById('eventDropdown').value = currentEvent.id;
+            document.getElementById('dashboardTitle').innerText = currentEvent.couple_names;
+
+            const inviteUrl = `${window.location.origin}/?event=${currentEvent.slug}`;
+            document.getElementById('inviteUrlInput').value = inviteUrl;
+
+            document.getElementById('editEventTime').value = currentEvent.event_time || '';
+            document.getElementById('editLocation').value = currentEvent.location || '';
+            document.getElementById('editEventPin').value = currentEvent.event_pin || '';
+            document.getElementById('editCustomMessage').value = currentEvent.custom_message || '';
+            document.getElementById('editRsvpOpen').checked = currentEvent.rsvp_open !== false;
+
+            const defaultImg = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80';
+            document.getElementById('currentCoverPreview').src = currentEvent.cover_photo_url || defaultImg;
+
+            loadRSVPs();
+            loadPhotos();
+        }
+
+        document.getElementById('updateEventDetailsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentEvent) return;
+
+            const event_time = document.getElementById('editEventTime').value;
+            const location = document.getElementById('editLocation').value;
+            const event_pin = document.getElementById('editEventPin').value.trim();
+            const custom_message = document.getElementById('editCustomMessage').value;
+            const rsvp_open = document.getElementById('editRsvpOpen').checked;
+
+            const { error } = await supabaseClient
+                .from('events')
+                .update({ event_time, location, event_pin, custom_message, rsvp_open })
+                .eq('id', currentEvent.id);
+
+            if (error) {
+                alert('Fout bij opslaan: ' + error.message);
+            } else {
+                currentEvent.event_time = event_time;
+                currentEvent.location = location;
+                currentEvent.event_pin = event_pin;
+                currentEvent.custom_message = custom_message;
+                currentEvent.rsvp_open = rsvp_open;
+                alert('Details succesvol opgeslagen!');
+            }
+        });
+
+        function showCreateEventForm() {
+            document.getElementById('createEventBox').style.display = 'block';
+            document.getElementById('activeEventContent').style.display = 'none';
+        }
+
+        function cancelCreateEvent() {
+            if (userEvents.length > 0) {
+                document.getElementById('createEventBox').style.display = 'none';
+                document.getElementById('activeEventContent').style.display = 'block';
+            }
+        }
+
+        // PREVIEW BEKIJKEN VÓÓR HET OPSLAAN
+        async function previewNewEvent() {
+            const template_type = document.getElementById('templateType').value;
+            const couple_names = document.getElementById('coupleNames').value || 'Voorbeeld Uitnodiging';
+            const event_date = document.getElementById('eventDate').value || new Date().toISOString().split('T')[0];
+            const fileInput = document.getElementById('createCoverPhotoInput');
+
+            let coverPhotoUrl = '';
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const filePath = `temp_previews/temp_${Date.now()}.${file.name.split('.').pop()}`;
+                
+                try {
+                    const { error: uploadError } = await supabaseClient.storage.from('event-photos').upload(filePath, file);
+                    if (!uploadError) {
+                        const { data: urlData } = supabaseClient.storage.from('event-photos').getPublicUrl(filePath);
+                        coverPhotoUrl = urlData.publicUrl;
+                    }
+                } catch (err) {
+                    console.log("Temp upload error:", err);
+                }
+            }
+
+            const params = new URLSearchParams({
+                preview: 'true',
+                template: template_type,
+                names: couple_names,
+                date: event_date,
+                cover: coverPhotoUrl
+            });
+
+            window.open(`${window.location.origin}/?${params.toString()}`, '_blank');
+        }
+
+        // EVENT OPSLAAN (DEFINITIEF MET CREDIT CHECK)
+        document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const { data: profile, error: profileError } = await supabaseClient
+                .from('profiles')
+                .select('credits, is_super_admin')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (profileError || !profile || (!profile.is_super_admin && (profile.credits || 0) <= 0)) {
+                alert("⚠️ Je hebt onvoldoende credits (0) om een nieuw evenement aan te maken.\n\nNeem contact op met Revealo om nieuwe credits aan te kopen!");
                 return;
             }
 
+            const couple_names = document.getElementById('coupleNames').value;
+            const event_date = document.getElementById('eventDate').value;
+            const slug = document.getElementById('eventSlug').value.toLowerCase().replace(/\s+/g, '-');
+            const template_type = document.getElementById('templateType').value;
+            const event_pin = document.getElementById('eventPin').value.trim();
+            const fileInput = document.getElementById('createCoverPhotoInput');
+
+            let cover_photo_url = null;
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const filePath = `covers/${slug}_${Date.now()}.${file.name.split('.').pop()}`;
+                const { error: uploadErr } = await supabaseClient.storage.from('event-photos').upload(filePath, file);
+                if (!uploadErr) {
+                    const { data: urlData } = supabaseClient.storage.from('event-photos').getPublicUrl(filePath);
+                    cover_photo_url = urlData.publicUrl;
+                }
+            }
+
+            const { data, error } = await supabaseClient.from('events').insert([
+                { couple_names, event_date, slug, template_type, event_pin, cover_photo_url, user_id: currentUser.id }
+            ]);
+
+            if (error) {
+                alert('Fout bij aanmaken: ' + error.message);
+            } else {
+                if (!profile.is_super_admin) {
+                    await supabaseClient
+                        .from('profiles')
+                        .update({ credits: Math.max(0, (profile.credits || 0) - 1) })
+                        .eq('id', currentUser.id);
+                }
+
+                alert('Evenement succesvol aangemaakt!');
+                document.getElementById('createEventForm').reset();
+                showDashboard();
+            }
+        });
+
+        async function uploadCoverPhoto(input) {
+            if (!input.files || !input.files[0] || !currentEvent) return;
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}.${fileExt}`;
-            const filePath = `${currentSlug || 'default'}/${fileName}`;
+            const filePath = `covers/${currentEvent.slug}_${Date.now()}.${fileExt}`;
+
+            alert('Omslagfoto uploaden gestart...');
 
             try {
-                const { data: storageData, error: storageError } = await supabaseClient
+                const { error: storageError } = await supabaseClient
                     .storage
                     .from('event-photos')
                     .upload(filePath, file);
@@ -1124,224 +959,214 @@
                     .from('event-photos')
                     .getPublicUrl(filePath);
 
-                const photoUrl = urlData.publicUrl;
+                const coverPhotoUrl = urlData.publicUrl;
 
-                let resolvedEventId = null;
-                if (currentSlug) {
-                    const { data: eventData } = await supabaseClient
-                        .from('events')
-                        .select('id')
-                        .eq('slug', currentSlug)
-                        .maybeSingle();
-
-                    if (eventData) resolvedEventId = eventData.id;
-                }
-
-                const { error: dbError } = await supabaseClient.from('photos').insert([
-                    { event_id: resolvedEventId, photo_url: photoUrl }
-                ]);
+                const { error: dbError } = await supabaseClient
+                    .from('events')
+                    .update({ cover_photo_url: coverPhotoUrl })
+                    .eq('id', currentEvent.id);
 
                 if (dbError) throw dbError;
 
-                alert('Super! Je foto is geüpload en zichtbaar voor de organisator!');
-                input.value = '';
+                currentEvent.cover_photo_url = coverPhotoUrl;
+                document.getElementById('currentCoverPreview').src = coverPhotoUrl;
+                alert('Omslagfoto succesvol bijgewerkt!');
             } catch (err) {
-                alert('Fout bij uploaden: ' + err.message);
+                alert('Fout bij uploaden omslagfoto: ' + err.message);
             }
         }
 
-        async function generateGoogleWalletPass() {
-            if (isPreview) {
-                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+        async function loadRSVPs() {
+            const { data } = await supabaseClient.from('rsvps').select('*').eq('event_id', currentEvent.id);
+            let total = (data || []).length, attending = 0, declined = 0;
+            const tbody = document.getElementById('rsvpTableBody');
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nog geen RSVP reacties ontvangen.</td></tr>';
+            } else {
+                data.forEach(item => {
+                    if (item.attending) attending += (parseInt(item.guest_count) || 1);
+                    else declined += 1;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                      <td><strong>${item.guest_name || 'Anoniem'}</strong></td>
+                      <td><span class="${item.attending ? 'badge-yes' : 'badge-no'}">${item.attending ? 'Ja' : 'Nee'}</span></td>
+                      <td>${item.attending ? (item.guest_count || 1) : '-'}</td>
+                      <td>${item.dietary_requirements || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('totalGuests').innerText = total;
+            document.getElementById('attendingGuests').innerText = attending;
+            document.getElementById('declinedGuests').innerText = declined;
+        }
+
+        async function loadPhotos() {
+            const { data } = await supabaseClient.from('photos').select('*').eq('event_id', currentEvent.id).order('created_at', { ascending: false });
+            currentPhotos = data || [];
+            const grid = document.getElementById('photoGrid');
+
+            if (currentPhotos.length > 0) {
+                grid.innerHTML = '';
+                currentPhotos.forEach(p => {
+                    const img = document.createElement('img');
+                    img.src = p.photo_url;
+                    grid.appendChild(img);
+                });
+            } else {
+                grid.innerHTML = '<p style="font-size:12px; color:#6b7f8e;">Nog geen foto\'s ontvangen.</p>';
+            }
+        }
+
+        async function sendWalletBroadcast() {
+            const header = document.getElementById('notifHeader').value.trim();
+            const bodyText = document.getElementById('notifBody').value.trim();
+
+            if (!header || !bodyText) {
+                alert("Vul een titel en een bericht in voor de notificatie.");
                 return;
             }
+
+            if (!currentEvent) return;
+
+            const btn = document.getElementById('sendNotifBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ Notificatie Versturen...";
+            btn.disabled = true;
 
             try {
-                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+                const { data: passes, error } = await supabaseClient
+                    .from('wallet_passes')
+                    .select('object_id')
+                    .eq('event_slug', currentEvent.slug);
 
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({
-                        eventSlug: currentSlug || 'default',
-                        guestName: guestName,
-                        theme: isChristmasTheme ? 'christmas' : 'standard'
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.saveUrl) {
-                    const objectIdMatch = data.saveUrl.split('/').pop();
-                    if (objectIdMatch) {
-                        try {
-                            await supabaseClient.from('wallet_passes').insert([
-                                { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
-                            ]);
-                        } catch (dbErr) {
-                            console.log("Wallet pass database logging optioneel overgeslagen:", dbErr);
-                        }
-                    }
-
-                    window.location.href = data.saveUrl;
-                } else {
-                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+                if (error || !passes || passes.length === 0) {
+                    alert("Er zijn nog geen geregistreerde Google Wallet-passen gevonden voor dit evenement.");
+                    return;
                 }
+
+                let successCount = 0;
+
+                for (const pass of passes) {
+                    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-wallet-notification`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        },
+                        body: JSON.stringify({
+                            objectId: pass.object_id,
+                            header: header,
+                            bodyText: bodyText
+                        })
+                    });
+
+                    const resData = await response.json();
+                    if (resData.success) successCount++;
+                }
+
+                alert(`Success! Notificatie verzonden naar ${successCount} Wallet-pas(sen).`);
+                document.getElementById('notifHeader').value = '';
+                document.getElementById('notifBody').value = '';
             } catch (err) {
-                alert("Fout bij verbinden met server: " + err.message);
+                alert("Fout bij het versturen van de notificatie: " + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
-        function clickAppleWallet() {
-            if (isPreview) {
-                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+        async function downloadAllPhotosZIP() {
+            if (!currentPhotos || currentPhotos.length === 0) {
+                alert("Er zijn nog geen foto's geüpload om te downloaden.");
                 return;
             }
-            alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
-        }
 
-        function downloadCalendar() {
-            const icsData =
-                `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Revelo//Bruiloft//NL
-BEGIN:VEVENT
-SUMMARY:Uitnodiging
-DESCRIPTION:Save the date!
-DTSTART:20270615T140000Z
-DTEND:20270615T230000Z
-END:VEVENT
-END:VCALENDAR`;
+            const btn = document.getElementById('downloadPhotosBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Inpakken (ZIP)...";
+            btn.disabled = true;
 
-            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'Save-The-Date.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder(`foto-dump-${currentEvent.slug}`);
 
-        // Scratch Canvas Initialization
-        const canvas = document.getElementById('scratchCanvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-
-        function initScratchLayer() {
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            if (isChristmasTheme) {
-                gradient.addColorStop(0, '#f3e5ab');
-                gradient.addColorStop(0.5, '#d4af37');
-                gradient.addColorStop(1, '#aa7c11');
-            } else {
-                gradient.addColorStop(0, '#ebd8b6');
-                gradient.addColorStop(0.5, '#cbb281');
-                gradient.addColorStop(1, '#93784a');
-            }
-
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = isChristmasTheme ? '#0A2F1D' : '#ffffff';
-            ctx.font = '600 8px Plus Jakarta Sans';
-            ctx.textAlign = 'center';
-            ctx.fillText(isChristmasTheme ? '🎄 SCRATCH TO REVEAL ❄️' : 'SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 + 3);
-        }
-
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
-
-        function scratch(e) {
-            if (!isDrawing) return;
-            e.preventDefault();
-            const pos = getPos(e);
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(pos.x, pos.y, 18, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
-        canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
-        canvas.addEventListener('touchmove', scratch);
-        canvas.addEventListener('touchend', () => isDrawing = false);
-        initScratchLayer();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-
-            if (diff > 0) {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                document.getElementById('days').innerText = days;
-                document.getElementById('hours').innerText = hours;
-                document.getElementById('mins').innerText = mins;
-                document.getElementById('secs').innerText = secs;
-            }
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        function initSnow() {
-            const snowCanvas = document.getElementById('snowCanvas');
-            const snowCtx = snowCanvas.getContext('2d');
-            let width = snowCanvas.width = snowCanvas.offsetWidth;
-            let height = snowCanvas.height = snowCanvas.offsetHeight;
-
-            const numFlakes = 40;
-            const flakes = [];
-
-            for (let i = 0; i < numFlakes; i++) {
-                flakes.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    r: Math.random() * 2.5 + 1,
-                    d: Math.random() * 1 + 0.5,
-                    opacity: Math.random() * 0.7 + 0.3
-                });
-            }
-
-            function drawFlakes() {
-                snowCtx.clearRect(0, 0, width, height);
-                snowCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                snowCtx.beginPath();
-                for (let i = 0; i < numFlakes; i++) {
-                    const f = flakes[i];
-                    snowCtx.moveTo(f.x, f.y);
-                    snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                for (let i = 0; i < currentPhotos.length; i++) {
+                    const url = currentPhotos[i].photo_url;
+                    const response = await fetch(url);
+                    const blob = await response.blob();
+                    folder.file(`foto_${i + 1}.jpg`, blob);
                 }
-                snowCtx.fill();
-                moveFlakes();
+
+                const content = await zip.generateAsync({ type: "blob" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `foto-dump-${currentEvent.slug}.zip`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (err) {
+                alert("Fout bij downloaden ZIP: " + err.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
+        }
 
-            function moveFlakes() {
-                for (let i = 0; i < numFlakes; i++) {
-                    const f = flakes[i];
-                    f.y += Math.pow(f.d, 2) + 0.5;
-                    f.x += Math.sin(f.y / 20) * 0.5;
+        async function confirmDeleteEvent() {
+            if (!currentEvent) return;
 
-                    if (f.y > height) {
-                        flakes[i] = { x: Math.random() * width, y: 0, r: f.r, d: f.d, opacity: f.opacity };
-                    }
+            if (currentPhotos && currentPhotos.length > 0) {
+                const downloaded = confirm(`⚠️ Heb je alle ${currentPhotos.length} geüploade foto's al gedownload?\n\nAls je nu doorgaat worden alle foto's permanent verwijderd! Klik op 'Annuleren' als je ze eerst wilt downloaden.`);
+                if (!downloaded) {
+                    downloadAllPhotosZIP();
+                    return;
                 }
             }
 
-            setInterval(drawFlakes, 33);
+            const doubleCheck = confirm(`Weet je ECHT zeker dat je het evenement '${currentEvent.couple_names}' wilt verwijderen?\n\nDit kan NIET ongedaan worden gemaakt.`);
+            if (!doubleCheck) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('events')
+                    .delete()
+                    .eq('id', currentEvent.id);
+
+                if (error) throw error;
+
+                alert("Evenement succesvol verwijderd.");
+                showDashboard();
+            } catch (err) {
+                alert("Fout bij verwijderen: " + err.message);
+            }
         }
+
+        function copyInviteUrl() {
+            const input = document.getElementById('inviteUrlInput');
+            input.select();
+            document.execCommand('copy');
+            alert('Link gekopieerd!');
+        }
+
+        function shareWhatsApp() {
+            const url = document.getElementById('inviteUrlInput').value;
+            const pinText = currentEvent.event_pin ? ` (Toegangscode: ${currentEvent.event_pin})` : '';
+            const text = encodeURIComponent(`Lieve familie en vrienden, bekijk onze uitnodiging${pinText} en laat weten of je erbij bent: ${url}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function openPreviewMode() {
+            if (!currentEvent) return;
+            const previewUrl = `${window.location.origin}/?event=${currentEvent.slug}&preview=true`;
+            window.open(previewUrl, '_blank');
+        }
+
+        checkUser();
     </script>
 </body>
 
