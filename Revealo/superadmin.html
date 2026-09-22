@@ -4,168 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revealo | Super Admin Dashboard</title>
-    <!-- Fonts & Supabase JS -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background: #0b0c10;
-            color: #1c1d21;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 850px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 28px;
-            border-radius: 28px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            height: fit-content;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #eae5dc;
-            padding-bottom: 20px;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 22px;
-            color: #1c1d21;
-        }
-
-        p.sub {
-            color: #6b7f8e;
-            font-size: 13px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            background: #eae5dc;
-            padding: 16px;
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .stat-card .number {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1c1d21;
-            margin-top: 4px;
-        }
-
-        .stat-card label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #8a7246;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .user-table-card {
-            background: #f7f5f0;
-            border: 1px solid #eae5dc;
-            border-radius: 20px;
-            padding: 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        th {
-            padding: 10px;
-            background: #eae5dc;
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #8a7246;
-            font-weight: 700;
-        }
-
-        td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .badge-credit {
-            background: #1c1d21;
-            color: #cbb281;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 6px;
-        }
-
-        button {
-            background: #8a7246;
-            color: #fff;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 11px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        button:hover {
-            opacity: 0.85;
-        }
-
-        .btn-minus {
-            background: #dc3545;
-        }
-
-        .btn-logout {
-            background: #f8d7da;
-            color: #842029;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-dashboard {
-            background: #1c1d21;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0b0c10; color: #1c1d21; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
+        .card { width: 100%; max-width: 900px; background: rgba(255, 255, 255, 0.95); padding: 28px; border-radius: 28px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); height: fit-content; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eae5dc; padding-bottom: 20px; margin-bottom: 24px; }
+        h1 { font-family: 'Cinzel', serif; font-size: 22px; color: #1c1d21; }
+        p.sub { color: #6b7f8e; font-size: 13px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: #eae5dc; padding: 16px; border-radius: 16px; text-align: center; }
+        .stat-card .number { font-size: 24px; font-weight: 700; color: #1c1d21; margin-top: 4px; }
+        .stat-card label { font-size: 10px; text-transform: uppercase; color: #8a7246; font-weight: 700; letter-spacing: 0.5px; }
+        .user-table-card { background: #f7f5f0; border: 1px solid #eae5dc; border-radius: 20px; padding: 20px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+        th { padding: 10px; background: #eae5dc; font-size: 10px; text-transform: uppercase; color: #8a7246; font-weight: 700; }
+        td { padding: 12px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .badge-credit { background: #1c1d21; color: #cbb281; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+        .btn-group { display: flex; gap: 4px; flex-wrap: wrap; }
+        button { background: #8a7246; color: #fff; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 600; font-size: 11px; cursor: pointer; transition: opacity 0.2s; }
+        button:hover { opacity: 0.85; }
+        .btn-minus { background: #dc3545; }
+        .btn-impersonate { background: #1c1d21; color: #cbb281; }
+        .btn-logout { background: #f8d7da; color: #842029; border: none; padding: 8px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .btn-dashboard { background: #1c1d21; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .event-list { margin-top: 8px; font-size: 11px; background: #fff; padding: 8px; border-radius: 8px; border: 1px solid #ccc; display: none; }
+        .event-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
+        .event-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -178,7 +44,7 @@
     <header>
         <div>
             <h1>Super Admin Dashboard</h1>
-            <p class="sub">Overzicht & Beheer van Credits</p>
+            <p class="sub">Overzicht & Beheer van Credits & Events</p>
         </div>
         <div style="display:flex; gap:8px;">
             <a href="admin.html" class="btn-dashboard">Mijn Events</a>
@@ -186,7 +52,6 @@
         </div>
     </header>
 
-    <!-- STATISTIEKEN -->
     <div class="stats-grid">
         <div class="stat-card">
             <label>Totaal Gebruikers</label>
@@ -202,7 +67,6 @@
         </div>
     </div>
 
-    <!-- GEBRUIKERS TABEL -->
     <div class="user-table-card">
         <h2 style="font-family: 'Cinzel', serif; font-size: 16px; margin-bottom: 16px; color: #8a7246;">Gebruikersbeheer</h2>
         <table>
@@ -222,20 +86,16 @@
 </div>
 
 <script>
-    // Supabase gegevens uit admin.html
     const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function initSuperAdmin() {
-        // 1. Controleer of de gebruiker ingelogd is
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) {
-            window.location.href = "admin.html";
-            return;
-        }
+    let allEvents = [];
 
-        // 2. Controleer of het profiel 'is_super_admin' heeft
+    async function initSuperAdmin() {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) { window.location.href = "admin.html"; return; }
+
         const { data: profile, error } = await supabaseClient
             .from('profiles')
             .select('is_super_admin')
@@ -248,36 +108,49 @@
             return;
         }
 
-        // 3. Laad data
         await loadDashboardData();
     }
 
     async function loadDashboardData() {
-        // Haal alle profielen op
-        const { data: profiles, error: pError } = await supabaseClient.from('profiles').select('*');
-        // Haal totaal aantal events op
-        const { count: eventCount } = await supabaseClient.from('events').select('*', { count: 'exact', head: true });
+        const { data: profiles } = await supabaseClient.from('profiles').select('*');
+        const { data: events } = await supabaseClient.from('events').select('*');
+        allEvents = events || [];
 
-        if (pError) {
-            console.error(pError);
-            return;
-        }
-
-        // Update statistieken
-        document.getElementById('stat-users').innerText = profiles.length;
-        document.getElementById('stat-events').innerText = eventCount || 0;
+        document.getElementById('stat-users').innerText = profiles ? profiles.length : 0;
+        document.getElementById('stat-events').innerText = allEvents.length;
         
-        const totalCredits = profiles.reduce((sum, p) => sum + (p.credits || 0), 0);
+        const totalCredits = (profiles || []).reduce((sum, p) => sum + (p.credits || 0), 0);
         document.getElementById('stat-credits').innerText = totalCredits;
 
-        // Vul tabel
         const tbody = document.getElementById('user-table-body');
         tbody.innerHTML = '';
 
         profiles.forEach(p => {
+            const userEvents = allEvents.filter(e => e.user_id === p.id);
             const tr = document.createElement('tr');
+            
+            let eventsHtml = '';
+            if (userEvents.length > 0) {
+                eventsHtml = `<div class="event-list" id="events-${p.id}">`;
+                userEvents.forEach(e => {
+                    eventsHtml += `
+                        <div class="event-item">
+                            <span><strong>${e.couple_names}</strong> (${e.slug})</span>
+                            <button class="btn-impersonate" onclick="impersonateUser('${p.id}', '${e.id}')">🎭 Open Dashboard</button>
+                        </div>
+                    `;
+                });
+                eventsHtml += `</div>`;
+            } else {
+                eventsHtml = `<div class="event-list" id="events-${p.id}"><p style="color:#888;">Geen events aangemaakt.</p></div>`;
+            }
+
             tr.innerHTML = `
-                <td><strong>${p.email}</strong></td>
+                <td>
+                    <strong>${p.email}</strong>
+                    <div><button style="margin-top:4px; background:#6b7f8e; font-size:10px;" onclick="toggleEvents('${p.id}')">👁️ Events (${userEvents.length})</button></div>
+                    ${eventsHtml}
+                </td>
                 <td><span class="badge-credit">${p.credits || 0} credits</span></td>
                 <td>${p.is_super_admin ? '👑 Super Admin' : 'Organisator'}</td>
                 <td>
@@ -292,20 +165,29 @@
         });
     }
 
+    function toggleEvents(userId) {
+        const el = document.getElementById(`events-${userId}`);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function impersonateUser(targetUserId, targetEventId) {
+        sessionStorage.setItem('impersonate_user_id', targetUserId);
+        sessionStorage.setItem('impersonate_event_id', targetEventId);
+        window.location.href = "admin.html";
+    }
+
     async function updateCredits(userId, newAmount) {
         const { error } = await supabaseClient
             .from('profiles')
             .update({ credits: newAmount })
             .eq('id', userId);
 
-        if (error) {
-            alert("Fout bij bijwerken van credits: " + error.message);
-        } else {
-            loadDashboardData();
-        }
+        if (error) alert("Fout bij bijwerken: " + error.message);
+        else loadDashboardData();
     }
 
     async function logout() {
+        sessionStorage.clear();
         await supabaseClient.auth.signOut();
         window.location.href = "admin.html";
     }
