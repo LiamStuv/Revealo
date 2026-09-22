@@ -189,3 +189,1172 @@
 
         .price-list {
             list-style: none;
+            text-align: left;
+            max-width: 320px;
+            margin: 0 auto 28px;
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        .price-list li {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .price-list li::before {
+            content: "✓ ";
+            color: var(--accent-champagne);
+            font-weight: bold;
+        }
+
+        /* ---------------- UITNODIGING VIEW STYLES ---------------- */
+        #invitationView {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 420px;
+            max-height: 880px;
+            background: var(--card-bg);
+            backdrop-filter: blur(40px) saturate(190%);
+            -webkit-backdrop-filter: blur(40px) saturate(190%);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        @media (min-width: 420px) {
+            .app-container {
+                border-radius: 36px;
+                height: 740px;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .envelope-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--envelope-bg);
+            z-index: 20;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
+        }
+
+        .envelope-wrapper.open {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 224, 214, 0.85) 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 2;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 44%;
+            width: 64px;
+            height: 64px;
+            background: var(--wax-bg);
+            border-radius: 50%;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-title);
+            color: #ffffff;
+            font-size: 18px;
+            letter-spacing: 1px;
+            z-index: 3;
+            transition: background 0.5s ease;
+        }
+
+        .tap-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 10px;
+            letter-spacing: 3.5px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        #snowCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+        .card-frame {
+            min-height: 100%;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-champagne);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .names {
+            font-family: var(--font-title);
+            font-size: 28px;
+            color: var(--text-main);
+            font-weight: 500;
+            margin: 4px 0 2px 0;
+            letter-spacing: 1px;
+        }
+
+        .date {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        .event-info-box {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            width: 100%;
+            font-size: 11px;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .pin-unlock-btn {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px dashed rgba(0, 0, 0, 0.2);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-sub);
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .custom-message-text {
+            font-size: 11px;
+            font-style: italic;
+            color: var(--text-sub);
+            margin-top: 6px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 6px;
+        }
+
+        .scratch-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(255, 255, 255, 0.8);
+            margin: 6px 0;
+        }
+
+        .reveal-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #scratchCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        .countdown-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .time-box span {
+            display: block;
+            font-family: var(--font-title);
+            font-size: 16px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .time-box label {
+            font-size: 7px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .btn-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+            z-index: 2;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-radius: 22px;
+            font-size: 10px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-rsvp {
+            background: var(--text-main);
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-apple {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-google {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-calendar {
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 9px;
+            padding: 4px 0;
+        }
+
+        .rsvp-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(25px);
+            z-index: 30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .rsvp-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .rsvp-form-box {
+            width: 88%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(30px);
+            padding: 28px 22px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+
+        .rsvp-form-box h2 {
+            font-family: var(--font-title);
+            font-size: 20px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .rsvp-form-box label {
+            display: block;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-champagne);
+            font-weight: 600;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        .rsvp-form-box input,
+        .rsvp-form-box select,
+        .rsvp-form-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 12px;
+            font-family: var(--font-body);
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn-submit {
+            flex: 2;
+            padding: 12px;
+            background: var(--text-main);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-main);
+            border: none;
+            border-radius: 14px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="landingView">
+        <div class="landing-header">
+            <img src="revealo_logo.jpg" alt="Revealo Logo" class="landing-logo">
+            <a href="admin.html" class="btn-login">Inloggen Organisator</a>
+        </div>
+
+        <section class="hero">
+            <h1>De Meest Exclusieve <span>Digitale Krasuitnodiging</span> voor jouw Evenement</h1>
+            <p>Verras je gasten met een interactieve kraslaag, live photo dump, PIN-beveiliging en een digitale pas voor hun Apple of Google Wallet.</p>
+            <a href="admin.html" class="btn-cta">Maak Gratis een Proefversie</a>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="icon">✨</span>
+                <h3>Magische Kraslaag</h3>
+                <p>Gasten krassen op hun telefoonscherm om de datum en foto te onthullen.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📷</span>
+                <h3>Live Photo Dump</h3>
+                <p>Verzamel na afloop alle foto's van je gasten direct in je eigen dashboard.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📲</span>
+                <h3>Digital Wallet Passes</h3>
+                <p>Gasten slaan de uitnodiging op in hun Google of Apple Wallet met live meldingen.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🔒</span>
+                <h3>PIN Afscherming</h3>
+                <p>Scherm locaties of tijden veilig af met een unieke toegangscode.</p>
+            </div>
+        </section>
+
+        <section class="pricing-section">
+            <div class="pricing-box">
+                <h2 style="font-family: var(--font-title); font-size: 1.8rem;">Eén Vaste Prijs Per Event</h2>
+                <p style="color: #a0a5b5; font-size: 0.9rem;">Geen abonnement. Bouw gratis en betaal pas bij publicatie.</p>
+                <div class="price">TBA <span style="font-size:0.9rem; color:#a0a5b5; font-weight:normal;">/ per event</span></div>
+                <ul class="price-list">
+                    <li>Onbeperkt aantal gasten & RSVP's</li>
+                    <li>Keuze uit alle luxe thema's</li>
+                    <li>Photo Dump verzamelen & ZIP Download</li>
+                    <li>Google Wallet & Apple Wallet Passes</li>
+                    <li>Onbeperkt Pushnotificaties versturen</li>
+                </ul>
+                <a href="admin.html" class="btn-cta">Start Direct</a>
+            </div>
+        </section>
+    </div>
+
+    <div id="invitationView">
+        <div class="app-container">
+            <canvas id="snowCanvas"></canvas>
+
+            <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+                <div class="envelope-card">
+                    <div class="envelope-flap"></div>
+                    <div class="wax-seal" id="sealInitials">C&H</div>
+                    <div class="tap-text">Tap to open</div>
+                </div>
+            </div>
+
+            <div class="card-frame">
+                <div>
+                    <p class="subtitle">Save The Date</p>
+                    <h1 class="names" id="coupleNamesHeading">Clara & Hugo</h1>
+                    <p class="date" id="eventDateText">15 June 2027</p>
+                </div>
+
+                <div class="event-info-box" id="eventInfoBox" style="display:none;">
+                    <div class="event-info-item" id="timeDisplay" style="display:none;">
+                        <span>🕒</span> <span id="timeText"></span>
+                    </div>
+
+                    <div class="event-info-item" id="locationDisplay" style="display:none; margin-top:2px;">
+                        <span>📍</span>
+                        <span id="locationText" style="display:none;"></span>
+                        <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres te zien</button>
+                    </div>
+
+                    <div class="custom-message-text" id="customMessageDisplay" style="display:none;"></div>
+                </div>
+
+                <div class="scratch-container">
+                    <img class="reveal-photo"
+                        src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
+                        alt="Omslagfoto">
+                    <canvas id="scratchCanvas" width="140" height="140"></canvas>
+                </div>
+
+                <div class="countdown-grid">
+                    <div class="time-box"><span id="days">0</span><label>Days</label></div>
+                    <div class="time-box"><span id="hours">0</span><label>Hours</label></div>
+                    <div class="time-box"><span id="mins">0</span><label>Mins</label></div>
+                    <div class="time-box"><span id="secs">0</span><label>Secs</label></div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="action-btn btn-rsvp" id="rsvpBtn" onclick="openRSVP()">
+                        ✉️ RSVP Doorgeven
+                    </button>
+                    <button class="action-btn btn-google" onclick="openPhotoUpload()">
+                        📷 Foto Uploaden
+                    </button>
+                    <button class="action-btn btn-apple" onclick="clickAppleWallet()">
+                         Add to Apple Wallet
+                    </button>
+                    <button class="action-btn btn-google" onclick="generateGoogleWalletPass()">
+                        G Add to Google Wallet
+                    </button>
+                    <button class="action-btn btn-calendar" onclick="downloadCalendar()">
+                        📅 Add to Calendar (.ics)
+                    </button>
+                </div>
+
+                <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+            </div>
+
+            <div class="rsvp-modal" id="rsvpModal">
+                <div class="rsvp-form-box">
+                    <h2>Aanwezigheid</h2>
+                    <form id="rsvpForm">
+                        <label for="guestName">Jouw Naam / Namen</label>
+                        <input type="text" id="guestName" required placeholder="bijv. Jan & Lisa">
+
+                        <label for="attending">Ben je erbij?</label>
+                        <select id="attending">
+                            <option value="true">Ja, ik/wij zijn erbij!</option>
+                            <option value="false">Helaas, verhinderd</option>
+                        </select>
+
+                        <label for="guestCount">Aantal personen</label>
+                        <input type="number" id="guestCount" value="1" min="1" max="5">
+
+                        <label for="dietary">Dieetwensen / Opmerkingen</label>
+                        <textarea id="dietary" rows="2" placeholder="Vegetarisch, allergieën..."></textarea>
+
+                        <div class="modal-btns">
+                            <button type="button" class="btn-close" onclick="closeRSVP()">Annuleren</button>
+                            <button type="submit" class="btn-submit" id="submitBtn">Versturen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic"
+        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-112191.mp3"
+        loop></audio>
+
+    <script>
+        // AUTOMATISCHE REDIRECT VOOR WACHTWOORD RECOVERY (ALS IEMAND OP INDEX LANDT)
+        if (window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery')) {
+            window.location.href = 'admin.html' + window.location.hash;
+        }
+
+        const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSlug = urlParams.get('event');
+        const isPreview = urlParams.get('preview') === 'true';
+
+        // ROUTING TUSSEN LANDINGSPAGINA EN UITNODIGING
+        if (currentSlug || isPreview) {
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('invitationView').style.display = 'flex';
+        } else {
+            document.getElementById('landingView').style.display = 'block';
+            document.getElementById('invitationView').style.display = 'none';
+        }
+
+        let targetDate = new Date('2027-06-15T14:00:00').getTime();
+        let expectedPin = null;
+        let actualLocation = null;
+        let isChristmasTheme = false;
+
+        if (isPreview) {
+            window.addEventListener('DOMContentLoaded', () => {
+                const previewBanner = document.createElement('div');
+                previewBanner.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    background: linear-gradient(90deg, #dc3545, #8a7246);
+                    color: white;
+                    text-align: center;
+                    padding: 8px 10px;
+                    font-weight: bold;
+                    font-size: 11px;
+                    z-index: 99999;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                    letter-spacing: 0.5px;
+                `;
+                previewBanner.innerHTML = '⚠️ PROEFVERSIE PREVIEW | RSVPs, Foto Dump & Wallet-passen zijn uitgeschakeld';
+                document.body.prepend(previewBanner);
+            });
+        }
+
+        const TEMPLATES = {
+            luxury_botanical: {
+                subtitle: "Floral & Botanical Elegance",
+                bgGradient: "linear-gradient(135deg, #1c281a 0%, #2b3a29 50%, #121c1a 100%)",
+                accentColor: "#b59a5b",
+                defaultImage: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 241, 234, 0.96) 100%)",
+                envelopeBg: "linear-gradient(180deg, #3a4a38 0%, #2e3c2c 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #d8c282 0%, #b59a5b 60%, #705b2a 100%)",
+                textColor: "#2b3a29",
+                textSubColor: "#51695a"
+            },
+            wedding: {
+                subtitle: "Save The Date • Bruiloft",
+                bgGradient: "linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%)",
+                accentColor: "#cbb281",
+                defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
+            },
+            babyshower: {
+                subtitle: "Je bent uitgenodigd! • Babyshower",
+                bgGradient: "linear-gradient(135deg, #2b3a42 0%, #3f525c 50%, #202b31 100%)",
+                accentColor: "#a3c4f3",
+                defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 246, 250, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #edf4f8 0%, #d8e5ed 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #cbe3f7 0%, #a3c4f3 60%, #6893cb 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
+            },
+            birthday: {
+                subtitle: "Let's Celebrate! • Verjaardag",
+                bgGradient: "linear-gradient(135deg, #1f102e 0%, #32194a 50%, #130a1c 100%)",
+                accentColor: "#f72585",
+                defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 240, 245, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #fdf0f6 0%, #f7d6e6 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff70a6 0%, #f72585 60%, #9e1053 100%)",
+                textColor: "#1c1d21",
+                textSubColor: "#5e626e"
+            },
+            christmas: {
+                subtitle: "🎄 Warmest Wishes • Kerstuitnodiging ❄️",
+                bgGradient: "linear-gradient(135deg, #051A10 0%, #0A2F1D 50%, #03120A 100%)",
+                accentColor: "#D42426",
+                defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
+                envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff4d4d 0%, #d42426 60%, #7a0c0e 100%)",
+                textColor: "#0A2F1D",
+                textSubColor: "#51695A",
+                music: "https://cdn.pixabay.com/download/audio/2021/11/25/audio_24a2754685.mp3?filename=we-wish-you-a-merry-christmas-126685.mp3"
+            }
+        };
+
+        async function fetchEventDetails() {
+            const tempTemplate = urlParams.get('template');
+            const tempNames = urlParams.get('names');
+            const tempDate = urlParams.get('date');
+            const tempCover = urlParams.get('cover');
+
+            if (isPreview && tempTemplate) {
+                const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.wedding;
+                
+                if (tempTemplate === 'christmas') {
+                    isChristmasTheme = true;
+                    document.getElementById('snowCanvas').style.display = 'block';
+                    initSnow();
+                }
+
+                document.querySelector('.subtitle').innerText = selectedTemplate.subtitle;
+                document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
+                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
+                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
+                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
+                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
+                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
+                document.body.style.background = selectedTemplate.bgGradient;
+
+                if (tempNames) {
+                    document.getElementById('coupleNamesHeading').innerText = tempNames;
+                    const namesArr = tempNames.split('&').map(n => n.trim());
+                    if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
+                        document.getElementById('sealInitials').innerText = `${namesArr[0][0]}&${namesArr[1][0]}`;
+                    } else {
+                        document.getElementById('sealInitials').innerText = tempNames.substring(0, 2).toUpperCase();
+                    }
+                }
+
+                if (tempDate) {
+                    const eventDateObj = new Date(tempDate);
+                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+                    targetDate = eventDateObj.getTime();
+                    updateCountdown();
+                }
+
+                const revealImg = document.querySelector('.reveal-photo');
+                if (revealImg) {
+                    revealImg.src = (tempCover && tempCover !== '') ? tempCover : selectedTemplate.defaultImage;
+                }
+
+                return;
+            }
+
+            if (!currentSlug) return;
+
+            const { data } = await supabaseClient
+                .from('events')
+                .select('*')
+                .eq('slug', currentSlug)
+                .maybeSingle();
+
+            if (data) {
+                const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.wedding;
+
+                if (data.template_type === 'christmas') {
+                    isChristmasTheme = true;
+                    document.getElementById('snowCanvas').style.display = 'block';
+                    initSnow();
+                    const bgAudio = document.getElementById('bgMusic');
+                    if (bgAudio && selectedTemplate.music) {
+                        bgAudio.src = selectedTemplate.music;
+                    }
+                }
+
+                const subElem = document.querySelector('.subtitle');
+                if (subElem) subElem.innerText = selectedTemplate.subtitle;
+                
+                document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
+                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
+                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
+                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
+                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
+                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
+                
+                document.body.style.background = selectedTemplate.bgGradient;
+
+                if (data.couple_names) {
+                    document.getElementById('coupleNamesHeading').innerText = data.couple_names;
+                    const namesArr = data.couple_names.split('&').map(n => n.trim());
+                    if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
+                        document.getElementById('sealInitials').innerText = `${namesArr[0][0]}&${namesArr[1][0]}`;
+                    } else if (data.couple_names.length >= 2) {
+                        document.getElementById('sealInitials').innerText = data.couple_names.substring(0, 2).toUpperCase();
+                    }
+                }
+
+                if (data.event_date) {
+                    const eventDateObj = new Date(data.event_date);
+                    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', options);
+
+                    targetDate = eventDateObj.getTime();
+                    updateCountdown();
+                }
+
+                let hasExtraInfo = false;
+                if (data.event_time) {
+                    document.getElementById('timeText').innerText = data.event_time;
+                    document.getElementById('timeDisplay').style.display = 'flex';
+                    hasExtraInfo = true;
+                }
+
+                if (data.location) {
+                    actualLocation = data.location;
+                    expectedPin = data.event_pin;
+                    document.getElementById('locationDisplay').style.display = 'flex';
+                    hasExtraInfo = true;
+
+                    if (expectedPin && expectedPin.trim() !== '') {
+                        document.getElementById('pinUnlockBtn').style.display = 'inline-block';
+                        document.getElementById('locationText').style.display = 'none';
+                    } else {
+                        unlockLocation();
+                    }
+                }
+
+                if (data.custom_message) {
+                    document.getElementById('customMessageDisplay').innerText = data.custom_message;
+                    document.getElementById('customMessageDisplay').style.display = 'block';
+                    hasExtraInfo = true;
+                }
+
+                if (hasExtraInfo) {
+                    document.getElementById('eventInfoBox').style.display = 'block';
+                }
+
+                if (data.rsvp_open === false) {
+                    document.getElementById('rsvpBtn').style.display = 'none';
+                } else {
+                    document.getElementById('rsvpBtn').style.display = 'flex';
+                }
+
+                const revealImg = document.querySelector('.reveal-photo');
+                if (revealImg) {
+                    revealImg.src = data.cover_photo_url || selectedTemplate.defaultImage;
+                }
+            }
+        }
+        fetchEventDetails();
+
+        function promptPinCode() {
+            const inputPin = prompt("Voer de PIN-code van de uitnodiging in:");
+            if (inputPin && inputPin.trim().toLowerCase() === expectedPin.trim().toLowerCase()) {
+                unlockLocation();
+            } else if (inputPin !== null) {
+                alert("Onjuiste PIN-code. Vraag de code op bij de organisator.");
+            }
+        }
+
+        function unlockLocation() {
+            const locElem = document.getElementById('locationText');
+            locElem.innerText = actualLocation;
+            locElem.style.display = 'inline';
+            const btn = document.getElementById('pinUnlockBtn');
+            if (btn) btn.style.display = 'none';
+        }
+
+        function openEnvelope() {
+            document.getElementById('envelope').classList.add('open');
+            const music = document.getElementById('bgMusic');
+            music.play().catch(() => { });
+        }
+
+        function openRSVP() { document.getElementById('rsvpModal').classList.add('active'); }
+        function closeRSVP() { document.getElementById('rsvpModal').classList.remove('active'); }
+
+        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om echte RSVP-aanmeldingen van gasten te ontvangen!");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = 'Verzenden...';
+            btn.disabled = true;
+
+            const guest_name = document.getElementById('guestName').value;
+            const attending = document.getElementById('attending').value === 'true';
+            const guest_count = parseInt(document.getElementById('guestCount').value);
+            const dietary_requirements = document.getElementById('dietary').value;
+
+            try {
+                let resolvedEventId = null;
+                if (currentSlug) {
+                    const { data: eventData } = await supabaseClient
+                        .from('events')
+                        .select('id')
+                        .eq('slug', currentSlug)
+                        .maybeSingle();
+
+                    if (eventData) resolvedEventId = eventData.id;
+                }
+
+                const { error } = await supabaseClient.from('rsvps').insert([
+                    { guest_name, attending, guest_count, dietary_requirements, event_id: resolvedEventId }
+                ]);
+
+                if (error) throw error;
+
+                alert('Bedankt! Je RSVP is succesvol ontvangen.');
+                closeRSVP();
+                document.getElementById('rsvpForm').reset();
+            } catch (err) {
+                alert('Er ging iets mis met opslaan: ' + err.message);
+            } finally {
+                btn.innerText = 'Versturen';
+                btn.disabled = false;
+            }
+        });
+
+        function openPhotoUpload() {
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
+                return;
+            }
+            document.getElementById('photoInput').click();
+        }
+
+        async function uploadPhoto(input) {
+            if (!input.files || !input.files[0]) return;
+
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
+                return;
+            }
+
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `${currentSlug || 'default'}/${fileName}`;
+
+            try {
+                const { data: storageData, error: storageError } = await supabaseClient
+                    .storage
+                    .from('event-photos')
+                    .upload(filePath, file);
+
+                if (storageError) throw storageError;
+
+                const { data: urlData } = supabaseClient
+                    .storage
+                    .from('event-photos')
+                    .getPublicUrl(filePath);
+
+                const photoUrl = urlData.publicUrl;
+
+                let resolvedEventId = null;
+                if (currentSlug) {
+                    const { data: eventData } = await supabaseClient
+                        .from('events')
+                        .select('id')
+                        .eq('slug', currentSlug)
+                        .maybeSingle();
+
+                    if (eventData) resolvedEventId = eventData.id;
+                }
+
+                const { error: dbError } = await supabaseClient.from('photos').insert([
+                    { event_id: resolvedEventId, photo_url: photoUrl }
+                ]);
+
+                if (dbError) throw dbError;
+
+                alert('Super! Je foto is geüpload en zichtbaar voor de organisator!');
+                input.value = '';
+            } catch (err) {
+                alert('Fout bij uploaden: ' + err.message);
+            }
+        }
+
+        async function generateGoogleWalletPass() {
+            if (isPreview) {
+                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+                return;
+            }
+
+            try {
+                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify({
+                        eventSlug: currentSlug || 'default',
+                        guestName: guestName,
+                        theme: isChristmasTheme ? 'christmas' : 'standard'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.saveUrl) {
+                    const objectIdMatch = data.saveUrl.split('/').pop();
+                    if (objectIdMatch) {
+                        try {
+                            await supabaseClient.from('wallet_passes').insert([
+                                { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
+                            ]);
+                        } catch (dbErr) {
+                            console.log("Wallet pass database logging optioneel overgeslagen:", dbErr);
+                        }
+                    }
+
+                    window.location.href = data.saveUrl;
+                } else {
+                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+                }
+            } catch (err) {
+                alert("Fout bij verbinden met server: " + err.message);
+            }
+        }
+
+        function clickAppleWallet() {
+            if (isPreview) {
+                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+                return;
+            }
+            alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
+        }
+
+        function downloadCalendar() {
+            const icsData =
+                `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Revelo//Bruiloft//NL
+BEGIN:VEVENT
+SUMMARY:Uitnodiging
+DESCRIPTION:Save the date!
+DTSTART:20270615T140000Z
+DTEND:20270615T230000Z
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'Save-The-Date.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Scratch Canvas Initialization
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        function initScratchLayer() {
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            if (isChristmasTheme) {
+                gradient.addColorStop(0, '#f3e5ab');
+                gradient.addColorStop(0.5, '#d4af37');
+                gradient.addColorStop(1, '#aa7c11');
+            } else {
+                gradient.addColorStop(0, '#ebd8b6');
+                gradient.addColorStop(0.5, '#cbb281');
+                gradient.addColorStop(1, '#93784a');
+            }
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = isChristmasTheme ? '#0A2F1D' : '#ffffff';
+            ctx.font = '600 8px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText(isChristmasTheme ? '🎄 SCRATCH TO REVEAL ❄️' : 'SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 + 3);
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function scratch(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 18, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('touchmove', scratch);
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        initScratchLayer();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours;
+                document.getElementById('mins').innerText = mins;
+                document.getElementById('secs').innerText = secs;
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initSnow() {
+            const snowCanvas = document.getElementById('snowCanvas');
+            const snowCtx = snowCanvas.getContext('2d');
+            let width = snowCanvas.width = snowCanvas.offsetWidth;
+            let height = snowCanvas.height = snowCanvas.offsetHeight;
+
+            const numFlakes = 40;
+            const flakes = [];
+
+            for (let i = 0; i < numFlakes; i++) {
+                flakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2.5 + 1,
+                    d: Math.random() * 1 + 0.5,
+                    opacity: Math.random() * 0.7 + 0.3
+                });
+            }
+
+            function drawFlakes() {
+                snowCtx.clearRect(0, 0, width, height);
+                snowCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                snowCtx.beginPath();
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    snowCtx.moveTo(f.x, f.y);
+                    snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                }
+                snowCtx.fill();
+                moveFlakes();
+            }
+
+            function moveFlakes() {
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    f.y += Math.pow(f.d, 2) + 0.5;
+                    f.x += Math.sin(f.y / 20) * 0.5;
+
+                    if (f.y > height) {
+                        flakes[i] = { x: Math.random() * width, y: 0, r: f.r, d: f.d, opacity: f.opacity };
+                    }
+                }
+            }
+
+            setInterval(drawFlakes, 33);
+        }
+    </script>
+</body>
+
+</html>
