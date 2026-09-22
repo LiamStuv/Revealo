@@ -490,16 +490,19 @@
             <div id="activeEventContent" style="display:none;">
 
                 <!-- SHARE BANNER -->
-                <div class="share-banner">
-                    <h3>Digitale Uitnodiging Link</h3>
-                    <p>Stuur onderstaande link naar je gasten via WhatsApp:</p>
-                    <div class="share-input-group">
-                        <input type="text" id="inviteUrlInput" readonly>
-                        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
-                    </div>
-                    <button class="btn-wa" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
-                </div>
-
+              <!-- SHARE BANNER -->
+<div class="share-banner">
+    <h3>Digitale Uitnodiging Link</h3>
+    <p>Stuur onderstaande link naar je gasten via WhatsApp of bekijk eerst een voorbeeld:</p>
+    <div class="share-input-group">
+        <input type="text" id="inviteUrlInput" readonly>
+        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+        <button class="btn-wa" style="flex:2;" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
+        <button type="button" style="flex:1; background: #8a7246; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 600; font-size: 11px; cursor: pointer;" onclick="openPreviewMode()">👁️ Bekijk Preview</button>
+    </div>
+</div>
                 <!-- EVENT DETAILS EDIT FORM -->
                 <div class="auth-box" style="margin-bottom:24px; text-align:left;">
                     <div class="section-title" style="margin-top:0;">Uitnodiging Details & Beveiliging</div>
@@ -1055,6 +1058,12 @@
         }
 
         checkUser();
+
+        function openPreviewMode() {
+    if (!currentEvent) return;
+    const previewUrl = `${window.location.origin}/?event=${currentEvent.slug}&preview=true`;
+    window.open(previewUrl, '_blank');
+}
     </script>
 </body>
 
