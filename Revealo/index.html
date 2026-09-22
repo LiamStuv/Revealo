@@ -577,10 +577,36 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentSlug = urlParams.get('event');
+        const isPreview = urlParams.get('preview') === 'true'; // CONTROLEER OF PREVIEW ACTIEF IS
+
         let targetDate = new Date('2027-06-15T14:00:00').getTime();
         let expectedPin = null;
         let actualLocation = null;
         let isChristmasTheme = false;
+
+        // INSTELLEN PREVIEW MODUS BANNER EN BEVEILIGING
+        if (isPreview) {
+            window.addEventListener('DOMContentLoaded', () => {
+                const previewBanner = document.createElement('div');
+                previewBanner.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    background: linear-gradient(90deg, #dc3545, #8a7246);
+                    color: white;
+                    text-align: center;
+                    padding: 8px 10px;
+                    font-weight: bold;
+                    font-size: 11px;
+                    z-index: 99999;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                    letter-spacing: 0.5px;
+                `;
+                previewBanner.innerHTML = '⚠️ PROEFVERSIE PREVIEW | RSVPs, Foto Dump & Wallet-passen zijn uitgeschakeld';
+                document.body.prepend(previewBanner);
+            });
+        }
 
         const TEMPLATES = {
             wedding: {
@@ -616,7 +642,6 @@
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
-            // ULTIEM KERST THEMA
             christmas: {
                 subtitle: "🎄 Warmest Wishes • Kerstuitnodiging ❄️",
                 bgGradient: "linear-gradient(135deg, #051A10 0%, #0A2F1D 50%, #03120A 100%)",
@@ -757,6 +782,13 @@
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // PREVIEW BEVEILIGING
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om echte RSVP-aanmeldingen van gasten te ontvangen!");
+                return;
+            }
+
             const btn = document.getElementById('submitBtn');
             btn.innerText = 'Verzenden...';
             btn.disabled = true;
@@ -796,11 +828,21 @@
         });
 
         function openPhotoUpload() {
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
+                return;
+            }
             document.getElementById('photoInput').click();
         }
 
         async function uploadPhoto(input) {
             if (!input.files || !input.files[0]) return;
+
+            if (isPreview) {
+                alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om foto-uploads van gasten in te schakelen!");
+                return;
+            }
+
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}.${fileExt}`;
@@ -846,46 +888,55 @@
         }
 
         async function generateGoogleWalletPass() {
-    try {
-        const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
-
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            },
-            body: JSON.stringify({
-                eventSlug: currentSlug || 'default',
-                guestName: guestName,
-                theme: isChristmasTheme ? 'christmas' : 'standard'
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.saveUrl) {
-            // Optioneel: Registreer de gegenereerde Wallet Object ID in de database voor Push Notificaties
-            const objectIdMatch = data.saveUrl.split('/').pop();
-            if (objectIdMatch) {
-                try {
-                    await supabaseClient.from('wallet_passes').insert([
-                        { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
-                    ]);
-                } catch (dbErr) {
-                    console.log("Wallet pass database logging optioneel overgeslagen:", dbErr);
-                }
+            if (isPreview) {
+                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+                return;
             }
 
-            window.location.href = data.saveUrl;
-        } else {
-            alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+            try {
+                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
+
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify({
+                        eventSlug: currentSlug || 'default',
+                        guestName: guestName,
+                        theme: isChristmasTheme ? 'christmas' : 'standard'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.saveUrl) {
+                    const objectIdMatch = data.saveUrl.split('/').pop();
+                    if (objectIdMatch) {
+                        try {
+                            await supabaseClient.from('wallet_passes').insert([
+                                { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
+                            ]);
+                        } catch (dbErr) {
+                            console.log("Wallet pass database logging optioneel overgeslagen:", dbErr);
+                        }
+                    }
+
+                    window.location.href = data.saveUrl;
+                } else {
+                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
+                }
+            } catch (err) {
+                alert("Fout bij verbinden met server: " + err.message);
+            }
         }
-    } catch (err) {
-        alert("Fout bij verbinden met server: " + err.message);
-    }
-}
+
         function clickAppleWallet() {
+            if (isPreview) {
+                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
+                return;
+            }
             alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
         }
 
