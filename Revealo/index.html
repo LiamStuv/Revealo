@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -20,8 +20,7 @@
             --text-main: #1c1d21;
             --text-sub: #5e626e;
             --font-title: 'Cinzel', serif;
-            --font-serif: 'Cormorant Garamond', serif;
-            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
             --wax-bg: radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%);
             --envelope-bg: linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%);
             --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%);
@@ -44,9 +43,10 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
-        /* LANDINGSPAGINA STYLES */
+        /* ---------------- LANDINGSPAGINA STYLES ---------------- */
         #landingView {
             display: none;
             width: 100%;
@@ -110,7 +110,29 @@
 
         .btn-cta:hover { transform: translateY(-2px); }
 
-        /* UITNODIGING VIEW STYLES */
+        .features-grid {
+            max-width: 1000px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card .icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+        .feature-card h3 { font-family: var(--font-title); color: var(--accent-champagne); font-size: 1.1rem; margin-bottom: 8px; }
+        .feature-card p { font-size: 0.85rem; color: #a0a5b5; }
+
+        /* ---------------- UITNODIGING VIEW STYLES ---------------- */
         #invitationView {
             display: none;
             justify-content: center;
@@ -119,7 +141,14 @@
             width: 100%;
         }
 
-        .scene { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .scene-box {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
 
         .app-container {
             position: relative;
@@ -128,10 +157,13 @@
             max-width: 420px;
             max-height: 840px;
             background: var(--card-bg);
+            backdrop-filter: blur(40px) saturate(190%);
+            -webkit-backdrop-filter: blur(40px) saturate(190%);
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             overflow-x: hidden;
             perspective: 1000px;
+            transition: background 0.5s ease;
         }
 
         @media (min-width: 420px) {
@@ -142,393 +174,16 @@
             }
         }
 
-        /* ENVELOP GSAP LAGEN */
+        /* ENVELOP EN GSAP LAAG */
         .envelope-graphic {
-            position: absolute; inset: 0; z-index: 30;
-            background: radial-gradient(140% 90% at 50% 10%, #f7f5f0, #eae5dc 85%);
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            background: var(--envelope-bg);
         }
 
         .env-flap-wrap {
-            position: absolute; left: 0; right: 0; top: 0; height: 50%;
-            transform-style: preserve-3d; transform-origin: 50% 0%; z-index: 32;
-        }
-
-        .env-flap {
-            position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 224, 214, 0.85) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .seal {
-            position: absolute; left: 50%; top: 88%; width: 64px; height: 64px;
-            transform: translate(-50%, -50%); z-index: 33; cursor: pointer;
-        }
-
-        .seal-half {
-            position: absolute; inset: 0; border-radius: 50%;
-            background: var(--wax-bg);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
-            display: flex; justify-content: center; align-items: center;
-            font-family: var(--font-title); color: #ffffff; font-size: 18px;
-        }
-
-        .seal-left { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
-        .seal-right { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
-
-        .tap-hint {
-            position: absolute; left: 0; right: 0; bottom: 40px; z-index: 31;
-            text-align: center; font-size: 10px; letter-spacing: 3.5px;
-            color: var(--text-sub); text-transform: uppercase; font-weight: 500;
-        }
-
-        /* GORDIJNEN / DEUREN ANIMATIE */
-        .curtains { position: absolute; inset: 0; z-index: 20; display: flex; pointer-events: none; }
-        .curtain { position: relative; width: 50%; height: 100%; overflow: hidden; }
-        .curtain-fabric {
-            position: absolute; inset: 0;
-            background: linear-gradient(90deg, #eae5dc 0%, #f7f5f0 50%, #eae5dc 100%);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
-        }
-        .curtain-l .curtain-fabric { border-right: 1px solid var(--accent-champagne); }
-        .curtain-r .curtain-fabric { border-left: 1px solid var(--accent-champagne); }
-
-        /* INHOUD DEEL */
-        .card-frame {
-            min-height: 100%; padding: 28px 20px; display: flex;
-            flex-direction: column; align-items: center; justify-content: space-between;
-            text-align: center; position: relative; z-index: 10;
-        }
-
-        .subtitle { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-champagne); font-weight: 600; margin-top: 4px; }
-        .names { font-family: var(--font-title); font-size: 28px; color: var(--text-main); font-weight: 500; margin: 4px 0 2px 0; letter-spacing: 1px; }
-        .date { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-sub); font-weight: 500; }
-
-        .event-info-box {
-            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px);
-            border-radius: 18px; padding: 12px 16px; margin: 8px 0;
-            border: 1px solid rgba(255, 255, 255, 0.8); width: 100%;
-            font-size: 11px; color: var(--text-main); line-height: 1.5;
-        }
-
-        .event-info-item { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; }
-        .pin-unlock-btn { background: rgba(0, 0, 0, 0.05); border: 1px dashed rgba(0, 0, 0, 0.2); padding: 6px 12px; border-radius: 10px; font-size: 10px; font-weight: 600; color: var(--text-sub); cursor: pointer; margin-top: 4px; }
-
-        .scratch-container {
-            position: relative; width: 140px; height: 140px; border-radius: 50%;
-            overflow: hidden; box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(255, 255, 255, 0.8);
-            margin: 6px 0;
-        }
-        .reveal-photo { width: 100%; height: 100%; object-fit: cover; }
-        #scratchCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; touch-action: none; }
-
-        .countdown-grid { display: flex; gap: 10px; margin-bottom: 8px; }
-        .time-box { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.8); }
-        .time-box span { display: block; font-family: var(--font-title); font-size: 16px; color: var(--text-main); font-weight: 600; }
-        .time-box label { font-size: 7px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-sub); font-weight: 600; }
-
-        .btn-group { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; z-index: 2; }
-        .action-btn {
-            width: 100%; padding: 12px 0; border: none; border-radius: 22px; font-size: 10px;
-            font-family: var(--font-body); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
-        }
-        .btn-rsvp { background: var(--text-main); color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); }
-        .btn-apple { background: rgba(0, 0, 0, 0.85); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .btn-google { background: rgba(255, 255, 255, 0.7); color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.9); }
-        .btn-calendar { background: transparent; color: var(--text-sub); font-size: 9px; padding: 4px 0; }
-
-        .replay-btn {
-            appearance: none; border: 1px solid var(--accent-champagne); background: transparent;
-            color: var(--accent-champagne); font-family: var(--font-body); font-size: 11px;
-            letter-spacing: 1px; padding: 8px 18px; border-radius: 20px; cursor: pointer;
-            opacity: 0; transition: all 0.3s ease; text-transform: uppercase;
-        }
-        .replay-btn.is-visible { opacity: 1; }
-
-        .open-click-target { position: absolute; inset: 0; z-index: 40; cursor: pointer; }
-    </style>
-</head>
-
-<body>
-
-    <div id="landingView">
-        <div class="landing-header">
-            <img src="revealo_logo.jpg" alt="Revealo Logo" class="landing-logo">
-            <a href="admin.html" class="btn-login">Inloggen Organisator</a>
-        </div>
-
-        <section class="hero">
-            <h1>De Meest Exclusieve <span>Digitale Krasuitnodiging</span> voor jouw Evenement</h1>
-            <p>Verras je gasten met een interactieve kraslaag, live photo dump, PIN-beveiliging en een digitale pas voor hun Apple of Google Wallet.</p>
-            <a href="admin.html" class="btn-cta">Maak Gratis een Proefversie</a>
-        </section>
-
-        <section class="pricing-section" style="max-width:600px; margin:0 auto; text-align:center;">
-            <div class="pricing-box" style="background: rgba(255,255,255,0.05); border: 1px solid var(--accent-champagne); padding: 40px; border-radius: 28px;">
-                <h2>Eén Vaste Prijs Per Event</h2>
-                <div style="font-size: 2.8rem; font-weight: 700; color: var(--accent-champagne); margin: 16px 0;">€29 <span style="font-size:0.9rem; color:#a0a5b5;">/ per event</span></div>
-                <a href="admin.html" class="btn-cta">Start Direct</a>
-            </div>
-        </section>
-    </div>
-
-    <div id="invitationView">
-        <div class="scene">
-            <div class="app-container">
-
-                <div class="envelope-graphic" id="envelopeGraphic">
-                    <div class="env-flap-wrap" id="envFlapWrap">
-                        <div class="env-flap"></div>
-                        <div class="seal" id="seal">
-                            <div class="seal-half seal-left" id="sealLeft">C</div>
-                            <div class="seal-half seal-right" id="sealRight">H</div>
-                        </div>
-                    </div>
-                    <p class="tap-hint" id="tapHint">Tik op de envelop om te openen</p>
-                </div>
-
-                <div class="curtains" id="curtains">
-                    <div class="curtain curtain-l" id="curtainL"><div class="curtain-fabric"></div></div>
-                    <div class="curtain curtain-r" id="curtainR"><div class="curtain-fabric"></div></div>
-                </div>
-
-                <div class="card-frame" id="cardFrame">
-                    <div>
-                        <p class="subtitle">Save The Date</p>
-                        <h1 class="names" id="coupleNamesHeading">Clara & Hugo</h1>
-                        <p class="date" id="eventDateText">15 June 2027</p>
-                    </div>
-
-                    <div class="event-info-box" id="eventInfoBox" style="display:none;">
-                        <div class="event-info-item" id="timeDisplay" style="display:none;">
-                            <span>🕒</span> <span id="timeText"></span>
-                        </div>
-                        <div class="event-info-item" id="locationDisplay" style="display:none; margin-top:2px;">
-                            <span>📍</span>
-                            <span id="locationText" style="display:none;"></span>
-                            <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres te zien</button>
-                        </div>
-                    </div>
-
-                    <div class="scratch-container">
-                        <img class="reveal-photo" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" alt="Omslagfoto">
-                        <canvas id="scratchCanvas" width="140" height="140"></canvas>
-                    </div>
-
-                    <div class="countdown-grid">
-                        <div class="time-box"><span id="days">0</span><label>Days</label></div>
-                        <div class="time-box"><span id="hours">0</span><label>Hours</label></div>
-                        <div class="time-box"><span id="mins">0</span><label>Mins</label></div>
-                        <div class="time-box"><span id="secs">0</span><label>Secs</label></div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="action-btn btn-rsvp" id="rsvpBtn" onclick="openRSVP()">✉️ RSVP Doorgeven</button>
-                        <button class="action-btn btn-google" onclick="openPhotoUpload()">📷 Foto Uploaden</button>
-                        <button class="action-btn btn-apple" onclick="clickAppleWallet()"> Add to Apple Wallet</button>
-                        <button class="action-btn btn-google" onclick="generateGoogleWalletPass()">G Add to Google Wallet</button>
-                        <button class="action-btn btn-calendar" onclick="downloadCalendar()">📅 Add to Calendar (.ics)</button>
-                    </div>
-                </div>
-
-                <div class="open-click-target" id="openClickTarget"></div>
-            </div>
-
-            <button class="replay-btn" id="replayBtn">Opnieuw Afspelen 🔄</button>
-        </div>
-    </div>
-
-    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
-    <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-112191.mp3" loop></audio>
-
-    <script>
-        const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentSlug = urlParams.get('event');
-        const isPreview = urlParams.get('preview') === 'true';
-
-        if (currentSlug || isPreview) {
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('invitationView').style.display = 'flex';
-        } else {
-            document.getElementById('landingView').style.display = 'block';
-            document.getElementById('invitationView').style.display = 'none';
-        }
-
-        let targetDate = new Date('2027-06-15T14:00:00').getTime();
-        let expectedPin = null;
-        let actualLocation = null;
-
-        // GSAP TIMELINE IMPLEMENTATIE
-        gsap.set('#envFlapWrap', { transformPerspective: 900 });
-
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
-
-        tl.to('#sealLeft', { xPercent: -60, yPercent: -20, rotate: -25, opacity: 0, duration: 0.4 }, 0)
-          .to('#sealRight', { xPercent: 60, yPercent: -20, rotate: 25, opacity: 0, duration: 0.4 }, 0)
-          .to('#tapHint', { opacity: 0, duration: 0.2 }, 0)
-          .to('#envFlapWrap', { rotationX: -165, duration: 0.7, ease: 'power3.inOut' }, 0.15)
-          .to('#envelopeGraphic', { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.in' }, 0.5)
-          .to('#curtainL', { xPercent: -102, duration: 0.85, ease: 'power3.inOut' }, 0.7)
-          .to('#curtainR', { xPercent: 102, duration: 0.85, ease: 'power3.inOut' }, 0.7)
-          .fromTo('#cardFrame', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6 }, 0.9)
-          .add(() => {
-              document.getElementById('replayBtn').classList.add('is-visible');
-              document.getElementById('openClickTarget').style.display = 'none';
-          });
-
-        function playEnvelopeAnimation() {
-            tl.play();
-            const music = document.getElementById('bgMusic');
-            music.play().catch(() => {});
-        }
-
-        function resetEnvelopeAnimation() {
-            tl.pause(0);
-            gsap.set('#envelopeGraphic', { opacity: 1, scale: 1 });
-            gsap.set('#envFlapWrap', { rotationX: 0 });
-            gsap.set(['#sealLeft', '#sealRight'], { xPercent: 0, yPercent: 0, rotate: 0, opacity: 1 });
-            gsap.set(['#curtainL', '#curtainR'], { xPercent: 0 });
-            gsap.set('#tapHint', { opacity: 1 });
-            document.getElementById('replayBtn').classList.remove('is-visible');
-            document.getElementById('openClickTarget').style.display = 'block';
-        }
-
-        document.getElementById('openClickTarget').addEventListener('click', playEnvelopeAnimation);
-        document.getElementById('replayBtn').addEventListener('click', resetEnvelopeAnimation);
-
-        // DATA OPHALEN UIT SUPABASE
-        async function fetchEventDetails() {
-            if (!currentSlug) return;
-            const { data } = await supabaseClient.from('events').select('*').eq('slug', currentSlug).maybeSingle();
-            if (data) {
-                if (data.couple_names) {
-                    document.getElementById('coupleNamesHeading').innerText = data.couple_names;
-                    const namesArr = data.couple_names.split('&').map(n => n.trim());
-                    if (namesArr.length === 2) {
-                        document.getElementById('sealLeft').innerText = namesArr[0][0];
-                        document.getElementById('sealRight').innerText = namesArr[1][0];
-                    }
-                }
-                if (data.event_date) {
-                    const eventDateObj = new Date(data.event_date);
-                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
-                    targetDate = eventDateObj.getTime();
-                    updateCountdown();
-                }
-                if (data.event_time) {
-                    document.getElementById('timeText').innerText = data.event_time;
-                    document.getElementById('timeDisplay').style.display = 'flex';
-                    document.getElementById('eventInfoBox').style.display = 'block';
-                }
-                if (data.location) {
-                    actualLocation = data.location;
-                    expectedPin = data.event_pin;
-                    document.getElementById('locationDisplay').style.display = 'flex';
-                    if (expectedPin && expectedPin.trim() !== '') {
-                        document.getElementById('pinUnlockBtn').style.display = 'inline-block';
-                    } else {
-                        document.getElementById('locationText').innerText = actualLocation;
-                        document.getElementById('locationText').style.display = 'inline';
-                    }
-                    document.getElementById('eventInfoBox').style.display = 'block';
-                }
-                const revealImg = document.querySelector('.reveal-photo');
-                if (revealImg && data.cover_photo_url) revealImg.src = data.cover_photo_url;
-            }
-        }
-        fetchEventDetails();
-
-        function promptPinCode() {
-            const inputPin = prompt("Voer de PIN-code van de uitnodiging in:");
-            if (inputPin && inputPin.trim().toLowerCase() === expectedPin.trim().toLowerCase()) {
-                document.getElementById('locationText').innerText = actualLocation;
-                document.getElementById('locationText').style.display = 'inline';
-                document.getElementById('pinUnlockBtn').style.display = 'none';
-            } else if (inputPin !== null) {
-                alert("Onjuiste PIN-code.");
-            }
-        }
-
-        // KRASLAAG CANVASS
-        const canvas = document.getElementById('scratchCanvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-
-        function initScratchLayer() {
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#ebd8b6');
-            gradient.addColorStop(0.5, '#cbb281');
-            gradient.addColorStop(1, '#93784a');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '600 8px Plus Jakarta Sans';
-            ctx.textAlign = 'center';
-            ctx.fillText('SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 + 3);
-        }
-
-        function scratch(e) {
-            if (!isDrawing) return;
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(x, y, 18, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
-        canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
-        canvas.addEventListener('touchmove', scratch);
-        canvas.addEventListener('touchend', () => isDrawing = false);
-        initScratchLayer();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            if (diff > 0) {
-                document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-                document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-            }
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        function openPhotoUpload() { document.getElementById('photoInput').click(); }
-
-        async function uploadPhoto(input) {
-            if (!input.files || !input.files[0]) return;
-            const file = input.files[0];
-            const filePath = `${currentSlug || 'default'}/${Date.now()}.${file.name.split('.').pop()}`;
-            try {
-                const { error } = await supabaseClient.storage.from('event-photos').upload(filePath, file);
-                if (error) throw error;
-                const { data: urlData } = supabaseClient.storage.from('event-photos').getPublicUrl(filePath);
-                let resolvedEventId = null;
-                if (currentSlug) {
-                    const { data: eventData } = await supabaseClient.from('events').select('id').eq('slug', currentSlug).maybeSingle();
-                    if (eventData) resolvedEventId = eventData.id;
-                }
-                await supabaseClient.from('photos').insert([{ event_id: resolvedEventId, photo_url: urlData.publicUrl }]);
-                alert('Super! Je foto is geüpload.');
-                input.value = '';
-            } catch (err) { alert('Fout bij uploaden: ' + err.message); }
-        }
-
-        function generateGoogleWalletPass() { alert("Google Wallet-pas genereren gestart!"); }
-        function clickAppleWallet() { alert("Apple Wallet integratie wordt geactiveerd!"); }
-        function downloadCalendar() { alert("Kalenderbestand gedownload!"); }
-    </script>
-</body>
-
-</html>
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 50%;
+            transform
