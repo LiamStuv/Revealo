@@ -825,7 +825,39 @@
         }
 
         const TEMPLATES = {
-            wedding: {
+           // Nieuw Thema toevoegen aan TEMPLATES object
+TEMPLATES['luxury_botanical'] = {
+    name: "Luxury Botanical / Floral Elegance",
+    font: "'Cinzel', serif",
+    bgColor: "#f4f1ea", // Zachte, warme achtergrondkleur
+    cardBg: "#ffffff",
+    textColor: "#2b3a29", // Diep olijfgroen / botanisch groen
+    accentColor: "#b59a5b", // Goud accent
+    envelopeBg: "#3a4a38", // Luxe donkergroene envelop
+    envelopeFlap: "#2e3c2c",
+    waxSealColor: "#b59a5b", // Gouden lakstempel
+    sealText: "🌿",
+    borderRadius: "16px",
+    customCSS: `
+        .card-container {
+            border: 1px solid #dcd4c3;
+            box-shadow: 0 15px 35px rgba(43, 58, 41, 0.15);
+        }
+        .header-title {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            color: #2b3a29;
+        }
+        .btn-primary {
+            background-color: #2b3a29 !important;
+            color: #ffffff !important;
+            border-radius: 12px;
+        }
+    `
+};
+
+            
+             wedding: {
                 subtitle: "Save The Date • Bruiloft",
                 bgGradient: "linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%)",
                 accentColor: "#cbb281",
