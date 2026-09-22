@@ -474,7 +474,7 @@
             margin-bottom: 12px;
         }
 
-        /* MODAL WACHTWOORD VERGETEN */
+        /* MODAL WACHTWOORD VERGETEN / NIEUW WACHTWOORD */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -534,6 +534,15 @@
             </button>
 
             <button class="btn-secondary" id="toggleAuthBtn" onclick="toggleAuthMode()">Nog geen account? Registreer hier</button>
+        </div>
+
+        <div id="resetPasswordContainer" class="auth-box" style="display:none;">
+            <h2>Nieuw Wachtwoord Instellen</h2>
+            <p class="sub" style="margin-bottom:16px;">Voer hier je nieuwe wachtwoord in:</p>
+            <form id="newPasswordForm">
+                <input type="password" id="newPasswordInput" placeholder="Nieuw wachtwoord" minlength="6" required>
+                <button type="submit" class="btn-primary" id="saveNewPasswordBtn">Wachtwoord Opslaan</button>
+            </form>
         </div>
 
         <div id="dashboardContainer" style="display: none;">
@@ -720,6 +729,36 @@
         let currentEvent = null;
         let currentPhotos = [];
 
+        // VANG OP WANNEER GEBRUIKER VIA WACHTWOORD-HERSTEL E-MAIL BINNENKOMT
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'PASSWORD_RECOVERY') {
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('dashboardContainer').style.display = 'none';
+                document.getElementById('resetPasswordContainer').style.display = 'block';
+            }
+        });
+
+        // NIEUW WACHTWOORD OPSLAAN
+        document.getElementById('newPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPasswordInput').value;
+            const btn = document.getElementById('saveNewPasswordBtn');
+            btn.innerText = 'Opslaan...';
+            btn.disabled = true;
+
+            const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
+
+            if (error) {
+                alert("Fout bij bijwerken: " + error.message);
+                btn.innerText = 'Wachtwoord Opslaan';
+                btn.disabled = false;
+            } else {
+                alert("Je wachtwoord is succesvol gewijzigd! Je wordt nu ingelogd.");
+                document.getElementById('resetPasswordContainer').style.display = 'none';
+                checkUser();
+            }
+        });
+
         async function checkUser() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
@@ -754,7 +793,6 @@
             }
         });
 
-        // WACHTWOORD VERGETEN MODAL FUNCTIES
         function openForgotModal() {
             document.getElementById('forgotModal').style.display = 'flex';
         }
@@ -782,7 +820,6 @@
             }
         }
 
-        // INLOGGEN MET GOOGLE
         async function loginWithGoogle() {
             const { error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
@@ -930,7 +967,6 @@
             }
         }
 
-        // PREVIEW BEKIJKEN VÓÓR HET OPSLAAN
         async function previewNewEvent() {
             const template_type = document.getElementById('templateType').value;
             const couple_names = document.getElementById('coupleNames').value || 'Voorbeeld Uitnodiging';
@@ -965,7 +1001,6 @@
             window.open(`${window.location.origin}/?${params.toString()}`, '_blank');
         }
 
-        // EVENT OPSLAAN (DEFINITIEF MET CREDIT CHECK)
         document.getElementById('createEventForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
