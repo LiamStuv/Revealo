@@ -656,32 +656,56 @@
             document.getElementById('dashboardContainer').style.display = 'none';
         }
 
-        async function showDashboard() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('dashboardContainer').style.display = 'block';
+       async function showDashboard() {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
 
-            const { data: events, error } = await supabaseClient
-                .from('events')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false });
+    // CHECK OF ER EEN IMPERSONATE SESSIE ACTIEF IS
+    const impersonateUserId = sessionStorage.getItem('impersonate_user_id');
+    const targetUserId = impersonateUserId || currentUser.id;
 
-            userEvents = events || [];
-
-            if (userEvents.length > 0) {
-                document.getElementById('eventSelectorContainer').style.display = 'flex';
-                document.getElementById('createEventBox').style.display = 'none';
-                document.getElementById('activeEventContent').style.display = 'block';
-
-                populateEventDropdown();
-                selectEvent(userEvents[0].id);
-            } else {
-                document.getElementById('eventSelectorContainer').style.display = 'none';
-                document.getElementById('createEventBox').style.display = 'block';
-                document.getElementById('activeEventContent').style.display = 'none';
-            }
+    // Voeg een waarschuwingsbanner toe als Impersonate Mode actief is
+    if (impersonateUserId) {
+        let banner = document.getElementById('impersonateBanner');
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'impersonateBanner';
+            banner.style.cssText = 'background: #dc3545; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 12px; border-radius: 12px; margin-bottom: 15px;';
+            document.getElementById('dashboardContainer').prepend(banner);
         }
+        banner.innerHTML = `🎭 IMPERSONATE MODE ACTIEF | <a href="#" onclick="exitImpersonate()" style="color:white; text-decoration:underline;">Stop Impersonating & Terug naar Super Admin</a>`;
+    }
 
+    const { data: events, error } = await supabaseClient
+        .from('events')
+        .select('*')
+        .eq('user_id', targetUserId)
+        .order('created_at', { ascending: false });
+
+    userEvents = events || [];
+
+    if (userEvents.length > 0) {
+        document.getElementById('eventSelectorContainer').style.display = 'flex';
+        document.getElementById('createEventBox').style.display = 'none';
+        document.getElementById('activeEventContent').style.display = 'block';
+
+        populateEventDropdown();
+        
+        const impersonateEventId = sessionStorage.getItem('impersonate_event_id');
+        const selectedId = (impersonateEventId && userEvents.some(e => e.id === impersonateEventId)) ? impersonateEventId : userEvents[0].id;
+        selectEvent(selectedId);
+    } else {
+        document.getElementById('eventSelectorContainer').style.display = 'none';
+        document.getElementById('createEventBox').style.display = 'block';
+        document.getElementById('activeEventContent').style.display = 'none';
+    }
+}
+
+function exitImpersonate() {
+    sessionStorage.removeItem('impersonate_user_id');
+    sessionStorage.removeItem('impersonate_event_id');
+    window.location.href = "superadmin.html";
+}
         function populateEventDropdown() {
             const dropdown = document.getElementById('eventDropdown');
             dropdown.innerHTML = '';
