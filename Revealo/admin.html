@@ -156,6 +156,18 @@
             text-decoration: underline;
         }
 
+        .btn-forgot {
+            display: block;
+            margin-top: 6px;
+            color: #8a7246;
+            font-size: 11px;
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
         .btn-danger {
             background: #dc3545;
             color: #fff;
@@ -461,6 +473,32 @@
             font-size: 11px;
             margin-bottom: 12px;
         }
+
+        /* MODAL WACHTWOORD VERGETEN */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            padding: 28px;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 
@@ -480,6 +518,8 @@
                 <input type="password" id="authPassword" placeholder="Wachtwoord" required>
                 <button type="submit" class="btn-primary" id="authSubmitBtn">Inloggen</button>
             </form>
+
+            <button type="button" class="btn-forgot" id="forgotBtn" onclick="openForgotModal()">Wachtwoord vergeten?</button>
 
             <div class="divider">of</div>
 
@@ -657,6 +697,18 @@
 
     </div>
 
+    <div id="forgotModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="font-family:'Cinzel', serif; margin-bottom:8px; font-size:18px;">Wachtwoord Herstellen</h3>
+            <p style="font-size:12px; color:#6b7f8e; margin-bottom:16px;">Vul je e-mailadres in. We sturen je direct een herstel-link.</p>
+            <input type="email" id="forgotEmail" placeholder="E-mailadres" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc; font-size:13px; margin-bottom:12px;">
+            <div style="display:flex; gap:10px;">
+                <button type="button" class="btn-secondary" style="flex:1;" onclick="closeForgotModal()">Annuleren</button>
+                <button type="button" class="btn-primary" style="flex:2; margin-top:0;" onclick="sendPasswordReset()">Verstuur Link</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
@@ -683,6 +735,7 @@
             document.getElementById('authTitle').innerText = isRegisterMode ? 'Account Registreren' : 'Inloggen Organisator';
             document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'Registreren' : 'Inloggen';
             document.getElementById('toggleAuthBtn').innerText = isRegisterMode ? 'Al een account? Log in' : 'Nog geen account? Registreer hier';
+            document.getElementById('forgotBtn').style.display = isRegisterMode ? 'none' : 'block';
         }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
@@ -700,6 +753,34 @@
                 else checkUser();
             }
         });
+
+        // WACHTWOORD VERGETEN MODAL FUNCTIES
+        function openForgotModal() {
+            document.getElementById('forgotModal').style.display = 'flex';
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotModal').style.display = 'none';
+        }
+
+        async function sendPasswordReset() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email) {
+                alert("Vul een geldig e-mailadres in.");
+                return;
+            }
+
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/admin.html`
+            });
+
+            if (error) {
+                alert("Fout bij versturen: " + error.message);
+            } else {
+                alert("Er is een herstel-link verstuurd naar je e-mailadres! Check ook je spambox.");
+                closeForgotModal();
+            }
+        }
 
         // INLOGGEN MET GOOGLE
         async function loginWithGoogle() {
