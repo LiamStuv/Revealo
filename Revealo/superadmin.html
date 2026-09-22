@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revealo | Super Admin Dashboard</title>
+    <!-- Fonts & Supabase JS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: #0b0c10;
+            color: #1c1d21;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            height: fit-content;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eae5dc;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            color: #1c1d21;
+        }
+
+        p.sub {
+            color: #6b7f8e;
+            font-size: 13px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #eae5dc;
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1d21;
+            margin-top: 4px;
+        }
+
+        .stat-card label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #8a7246;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .user-table-card {
+            background: #f7f5f0;
+            border: 1px solid #eae5dc;
+            border-radius: 20px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th {
+            padding: 10px;
+            background: #eae5dc;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #8a7246;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badge-credit {
+            background: #1c1d21;
+            color: #cbb281;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        button {
+            background: #8a7246;
+            color: #fff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .btn-minus {
+            background: #dc3545;
+        }
+
+        .btn-logout {
+            background: #f8d7da;
+            color: #842029;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-dashboard {
+            background: #1c1d21;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="logo.png" alt="Revealo Logo" style="width: 140px; height: auto;">
+    </div>
+
+    <header>
+        <div>
+            <h1>Super Admin Dashboard</h1>
+            <p class="sub">Overzicht & Beheer van Credits</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <a href="admin.html" class="btn-dashboard">Mijn Events</a>
+            <button class="btn-logout" onclick="logout()">Uitloggen</button>
+        </div>
+    </header>
+
+    <!-- STATISTIEKEN -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <label>Totaal Gebruikers</label>
+            <div class="number" id="stat-users">0</div>
+        </div>
+        <div class="stat-card">
+            <label>Actieve Events</label>
+            <div class="number" id="stat-events">0</div>
+        </div>
+        <div class="stat-card">
+            <label>Credits in Omloop</label>
+            <div class="number" id="stat-credits">0</div>
+        </div>
+    </div>
+
+    <!-- GEBRUIKERS TABEL -->
+    <div class="user-table-card">
+        <h2 style="font-family: 'Cinzel', serif; font-size: 16px; margin-bottom: 16px; color: #8a7246;">Gebruikersbeheer</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Credits</th>
+                    <th>Rol</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody id="user-table-body">
+                <tr><td colspan="4" style="text-align: center; color: #6b7f8e;">Laden...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Supabase gegevens uit admin.html
+    const SUPABASE_URL = 'https://fgjgamffwlugfjfpptob.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamdhbWZmd2x1Z2ZqZnBwdG9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDExNzQsImV4cCI6MjEwNTExNzE3NH0.YmfzqR1zoUxMw-tx1Rr-qJSln_KSJnJ9L5scK5j9f20';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function initSuperAdmin() {
+        // 1. Controleer of de gebruiker ingelogd is
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) {
+            window.location.href = "admin.html";
+            return;
+        }
+
+        // 2. Controleer of het profiel 'is_super_admin' heeft
+        const { data: profile, error } = await supabaseClient
+            .from('profiles')
+            .select('is_super_admin')
+            .eq('id', session.user.id)
+            .single();
+
+        if (error || !profile || !profile.is_super_admin) {
+            alert("Toegang geweigerd: Je bent geen Super Admin.");
+            window.location.href = "admin.html";
+            return;
+        }
+
+        // 3. Laad data
+        await loadDashboardData();
+    }
+
+    async function loadDashboardData() {
+        // Haal alle profielen op
+        const { data: profiles, error: pError } = await supabaseClient.from('profiles').select('*');
+        // Haal totaal aantal events op
+        const { count: eventCount } = await supabaseClient.from('events').select('*', { count: 'exact', head: true });
+
+        if (pError) {
+            console.error(pError);
+            return;
+        }
+
+        // Update statistieken
+        document.getElementById('stat-users').innerText = profiles.length;
+        document.getElementById('stat-events').innerText = eventCount || 0;
+        
+        const totalCredits = profiles.reduce((sum, p) => sum + (p.credits || 0), 0);
+        document.getElementById('stat-credits').innerText = totalCredits;
+
+        // Vul tabel
+        const tbody = document.getElementById('user-table-body');
+        tbody.innerHTML = '';
+
+        profiles.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${p.email}</strong></td>
+                <td><span class="badge-credit">${p.credits || 0} credits</span></td>
+                <td>${p.is_super_admin ? '👑 Super Admin' : 'Organisator'}</td>
+                <td>
+                    <div class="btn-group">
+                        <button onclick="updateCredits('${p.id}', ${(p.credits || 0) + 1})">+1</button>
+                        <button onclick="updateCredits('${p.id}', ${(p.credits || 0) + 5})">+5</button>
+                        <button class="btn-minus" onclick="updateCredits('${p.id}', Math.max(0, ${(p.credits || 0) - 1}))">-1</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function updateCredits(userId, newAmount) {
+        const { error } = await supabaseClient
+            .from('profiles')
+            .update({ credits: newAmount })
+            .eq('id', userId);
+
+        if (error) {
+            alert("Fout bij bijwerken van credits: " + error.message);
+        } else {
+            loadDashboardData();
+        }
+    }
+
+    async function logout() {
+        await supabaseClient.auth.signOut();
+        window.location.href = "admin.html";
+    }
+
+    initSuperAdmin();
+</script>
+</body>
+</html>
