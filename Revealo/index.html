@@ -577,14 +577,13 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentSlug = urlParams.get('event');
-        const isPreview = urlParams.get('preview') === 'true'; // CONTROLEER OF PREVIEW ACTIEF IS
+        const isPreview = urlParams.get('preview') === 'true';
 
         let targetDate = new Date('2027-06-15T14:00:00').getTime();
         let expectedPin = null;
         let actualLocation = null;
         let isChristmasTheme = false;
 
-        // INSTELLEN PREVIEW MODUS BANNER EN BEVEILIGING
         if (isPreview) {
             window.addEventListener('DOMContentLoaded', () => {
                 const previewBanner = document.createElement('div');
@@ -657,9 +656,59 @@
         };
 
         async function fetchEventDetails() {
+            // 1. VOORBEELD PREVIEW VÓÓR HET OPSLAAN MET VORM-PARAMETERS
+            const tempTemplate = urlParams.get('template');
+            const tempNames = urlParams.get('names');
+            const tempDate = urlParams.get('date');
+            const tempCover = urlParams.get('cover');
+
+            if (isPreview && tempTemplate) {
+                const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.wedding;
+                
+                if (tempTemplate === 'christmas') {
+                    isChristmasTheme = true;
+                    document.getElementById('snowCanvas').style.display = 'block';
+                    initSnow();
+                }
+
+                document.querySelector('.subtitle').innerText = selectedTemplate.subtitle;
+                document.documentElement.style.setProperty('--accent-champagne', selectedTemplate.accentColor);
+                document.documentElement.style.setProperty('--wax-bg', selectedTemplate.waxBg);
+                document.documentElement.style.setProperty('--envelope-bg', selectedTemplate.envelopeBg);
+                document.documentElement.style.setProperty('--card-bg', selectedTemplate.cardBg);
+                document.documentElement.style.setProperty('--text-main', selectedTemplate.textColor);
+                document.documentElement.style.setProperty('--text-sub', selectedTemplate.textSubColor);
+                document.body.style.background = selectedTemplate.bgGradient;
+
+                if (tempNames) {
+                    document.getElementById('coupleNamesHeading').innerText = tempNames;
+                    const namesArr = tempNames.split('&').map(n => n.trim());
+                    if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
+                        document.getElementById('sealInitials').innerText = `${namesArr[0][0]}&${namesArr[1][0]}`;
+                    } else {
+                        document.getElementById('sealInitials').innerText = tempNames.substring(0, 2).toUpperCase();
+                    }
+                }
+
+                if (tempDate) {
+                    const eventDateObj = new Date(tempDate);
+                    document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+                    targetDate = eventDateObj.getTime();
+                    updateCountdown();
+                }
+
+                const revealImg = document.querySelector('.reveal-photo');
+                if (revealImg) {
+                    revealImg.src = (tempCover && tempCover !== '') ? tempCover : selectedTemplate.defaultImage;
+                }
+
+                return;
+            }
+
+            // 2. NORMALE EVENT PREVIEW / LIVE MODUS UIT SUPABASE
             if (!currentSlug) return;
 
-            const { data, error } = await supabaseClient
+            const { data } = await supabaseClient
                 .from('events')
                 .select('*')
                 .eq('slug', currentSlug)
@@ -783,7 +832,6 @@
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // PREVIEW BEVEILIGING
             if (isPreview) {
                 alert("🔒 Dit is een proefversie preview.\n\nKoop een credit in het dashboard om echte RSVP-aanmeldingen van gasten te ontvangen!");
                 return;
