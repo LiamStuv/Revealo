@@ -457,7 +457,7 @@
             <!-- EVENT AANMAKEN FORMULIER -->
             <div id="createEventBox" class="auth-box" style="display:none; margin-bottom:20px; text-align: left;">
                 <h2 style="text-align: center;">Nieuw Evenement Aanmaken</h2>
-                <p class="sub" style="text-align: center;">Kies een template en maak de uitnodigingspagina aan:</p>
+                <p class="sub" style="text-align: center;">Kies een template, stel je details in en bekijk gratis een preview:</p>
                 <form id="createEventForm">
                     <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Template / Event Type</label>
                     <select id="templateType" required>
@@ -473,11 +473,17 @@
                     <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Datum van het Event</label>
                     <input type="date" id="eventDate" required>
 
+                    <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Omslagfoto voor op Uitnodiging (Kraslaag)</label>
+                    <input type="file" id="createCoverPhotoInput" accept="image/*">
+
                     <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Unieke Link Slug</label>
                     <input type="text" id="eventSlug" placeholder="bijv: clara-hugo of lisa-baby" required>
 
                     <label style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #5e626e; margin-bottom: 4px; display: block;">Event PIN / Toegangscode (Optioneel)</label>
                     <input type="text" id="eventPin" placeholder="bijv: 1234 of FEEST (leeg = geen code)">
+
+                    <!-- PREVIEW KNOP VÓÓR AANKOOP -->
+                    <button type="button" class="btn-primary" style="background: #8a7246; margin-top: 12px; margin-bottom: 6px;" onclick="previewNewEvent()">👁️ Live Preview Bekijken (Gratis)</button>
 
                     <div style="display:flex; gap:10px; margin-top:10px;">
                         <button type="button" class="btn-secondary" style="flex:1;" onclick="cancelCreateEvent()">Annuleren</button>
@@ -490,19 +496,19 @@
             <div id="activeEventContent" style="display:none;">
 
                 <!-- SHARE BANNER -->
-              <!-- SHARE BANNER -->
-<div class="share-banner">
-    <h3>Digitale Uitnodiging Link</h3>
-    <p>Stuur onderstaande link naar je gasten via WhatsApp of bekijk eerst een voorbeeld:</p>
-    <div class="share-input-group">
-        <input type="text" id="inviteUrlInput" readonly>
-        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
-    </div>
-    <div style="display:flex; gap:10px; margin-top:10px;">
-        <button class="btn-wa" style="flex:2;" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
-        <button type="button" style="flex:1; background: #8a7246; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 600; font-size: 11px; cursor: pointer;" onclick="openPreviewMode()">👁️ Bekijk Preview</button>
-    </div>
-</div>
+                <div class="share-banner">
+                    <h3>Digitale Uitnodiging Link</h3>
+                    <p>Stuur onderstaande link naar je gasten via WhatsApp of bekijk eerst een voorbeeld:</p>
+                    <div class="share-input-group">
+                        <input type="text" id="inviteUrlInput" readonly>
+                        <button class="btn-copy" onclick="copyInviteUrl()">Kopiëren</button>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="btn-wa" style="flex:2;" onclick="shareWhatsApp()">💬 Deel via WhatsApp</button>
+                        <button type="button" style="flex:1; background: #8a7246; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 600; font-size: 11px; cursor: pointer;" onclick="openPreviewMode()">👁️ Bekijk Preview</button>
+                    </div>
+                </div>
+
                 <!-- EVENT DETAILS EDIT FORM -->
                 <div class="auth-box" style="margin-bottom:24px; text-align:left;">
                     <div class="section-title" style="margin-top:0;">Uitnodiging Details & Beveiliging</div>
@@ -664,11 +670,9 @@
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('dashboardContainer').style.display = 'block';
 
-            // CHECK OF ER EEN IMPERSONATE SESSIE ACTIEF IS
             const impersonateUserId = sessionStorage.getItem('impersonate_user_id');
             const targetUserId = impersonateUserId || currentUser.id;
 
-            // Voeg een waarschuwingsbanner toe als Impersonate Mode actief is
             if (impersonateUserId) {
                 let banner = document.getElementById('impersonateBanner');
                 if (!banner) {
@@ -788,11 +792,45 @@
             }
         }
 
-        // EVENT AANMAKEN MET CREDIT CHECK & AFTREK
+        // PREVIEW BEKIJKEN VÓÓR HET OPSLAAN
+        async function previewNewEvent() {
+            const template_type = document.getElementById('templateType').value;
+            const couple_names = document.getElementById('coupleNames').value || 'Voorbeeld Uitnodiging';
+            const event_date = document.getElementById('eventDate').value || new Date().toISOString().split('T')[0];
+            const fileInput = document.getElementById('createCoverPhotoInput');
+
+            let coverPhotoUrl = '';
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const filePath = `temp_previews/temp_${Date.now()}.${file.name.split('.').pop()}`;
+                
+                try {
+                    const { error: uploadError } = await supabaseClient.storage.from('event-photos').upload(filePath, file);
+                    if (!uploadError) {
+                        const { data: urlData } = supabaseClient.storage.from('event-photos').getPublicUrl(filePath);
+                        coverPhotoUrl = urlData.publicUrl;
+                    }
+                } catch (err) {
+                    console.log("Temp upload error:", err);
+                }
+            }
+
+            const params = new URLSearchParams({
+                preview: 'true',
+                template: template_type,
+                names: couple_names,
+                date: event_date,
+                cover: coverPhotoUrl
+            });
+
+            window.open(`${window.location.origin}/?${params.toString()}`, '_blank');
+        }
+
+        // EVENT OPSLAAN (DEFINITIEF MET CREDIT CHECK)
         document.getElementById('createEventForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // 1. Controleer credits van huidige gebruiker
             const { data: profile, error: profileError } = await supabaseClient
                 .from('profiles')
                 .select('credits, is_super_admin')
@@ -809,16 +847,27 @@
             const slug = document.getElementById('eventSlug').value.toLowerCase().replace(/\s+/g, '-');
             const template_type = document.getElementById('templateType').value;
             const event_pin = document.getElementById('eventPin').value.trim();
+            const fileInput = document.getElementById('createCoverPhotoInput');
 
-            // 2. Maak het event aan
+            let cover_photo_url = null;
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const filePath = `covers/${slug}_${Date.now()}.${file.name.split('.').pop()}`;
+                const { error: uploadErr } = await supabaseClient.storage.from('event-photos').upload(filePath, file);
+                if (!uploadErr) {
+                    const { data: urlData } = supabaseClient.storage.from('event-photos').getPublicUrl(filePath);
+                    cover_photo_url = urlData.publicUrl;
+                }
+            }
+
             const { data, error } = await supabaseClient.from('events').insert([
-                { couple_names, event_date, slug, template_type, event_pin, user_id: currentUser.id }
+                { couple_names, event_date, slug, template_type, event_pin, cover_photo_url, user_id: currentUser.id }
             ]);
 
             if (error) {
                 alert('Fout bij aanmaken: ' + error.message);
             } else {
-                // 3. Trek 1 credit af bij normale gebruikers
                 if (!profile.is_super_admin) {
                     await supabaseClient
                         .from('profiles')
@@ -916,7 +965,6 @@
             }
         }
 
-        // VERSTUUR GOOGLE WALLET PUSHNOTIFICATIE
         async function sendWalletBroadcast() {
             const header = document.getElementById('notifHeader').value.trim();
             const bodyText = document.getElementById('notifBody').value.trim();
@@ -975,7 +1023,6 @@
             }
         }
 
-        // DOWNLOAD ALLE FOTO'S ALS ZIP
         async function downloadAllPhotosZIP() {
             if (!currentPhotos || currentPhotos.length === 0) {
                 alert("Er zijn nog geen foto's geüpload om te downloaden.");
@@ -1013,7 +1060,6 @@
             }
         }
 
-        // EVENEMENT VERWIJDEREN
         async function confirmDeleteEvent() {
             if (!currentEvent) return;
 
@@ -1057,13 +1103,13 @@
             window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
-        checkUser();
-
         function openPreviewMode() {
-    if (!currentEvent) return;
-    const previewUrl = `${window.location.origin}/?event=${currentEvent.slug}&preview=true`;
-    window.open(previewUrl, '_blank');
-}
+            if (!currentEvent) return;
+            const previewUrl = `${window.location.origin}/?event=${currentEvent.slug}&preview=true`;
+            window.open(previewUrl, '_blank');
+        }
+
+        checkUser();
     </script>
 </body>
 
