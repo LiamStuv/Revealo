@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <style>
         :root {
@@ -21,8 +20,6 @@
             --text-sub: #5e626e;
             --font-title: 'Cinzel', serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --wax-bg: radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%);
-            --envelope-bg: linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%);
             --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%);
         }
 
@@ -174,67 +171,37 @@
             }
         }
 
-        /* ENVELOP EN GSAP LAAG */
-        .envelope-graphic {
+        /* VIDEO OVERLAY STYLES */
+        #videoEnvelopeWrapper {
             position: absolute;
             inset: 0;
-            z-index: 30;
-            background: var(--envelope-bg);
-        }
-
-        .env-flap-wrap {
-            position: absolute;
-            left: 0; right: 0; top: 0;
-            height: 50%;
-            transform-style: preserve-3d;
-            transform-origin: 50% 0%;
-            z-index: 32;
-        }
-
-        .env-flap {
-            position: absolute; inset: 0;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 224, 214, 0.85) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .seal {
-            position: absolute;
-            left: 50%; top: 88%;
-            width: 64px; height: 64px;
-            transform: translate(-50%, -50%);
-            z-index: 33;
+            z-index: 50;
+            background: #000;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .seal-half {
-            position: absolute; inset: 0;
-            border-radius: 50%;
-            background: var(--wax-bg);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.8);
-            display: flex; justify-content: center; align-items: center;
-            font-family: var(--font-title); color: #ffffff; font-size: 18px;
+        #envelopeVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .seal-left { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
-        .seal-right { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
-
-        .tap-hint {
-            position: absolute; left: 0; right: 0; bottom: 40px; z-index: 31;
-            text-align: center; font-size: 10px; letter-spacing: 3.5px;
-            color: var(--text-sub); text-transform: uppercase; font-weight: 500;
+        #tapHintText {
+            position: absolute;
+            bottom: 40px;
+            color: #ffffff;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
         }
-
-        /* GORDIJNEN / DEUREN ANIMATIE */
-        .curtains { position: absolute; inset: 0; z-index: 20; display: flex; pointer-events: none; }
-        .curtain { position: relative; width: 50%; height: 100%; overflow: hidden; }
-        .curtain-fabric {
-            position: absolute; inset: 0;
-            background: linear-gradient(90deg, #eae5dc 0%, #f7f5f0 50%, #eae5dc 100%);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
-        }
-        .curtain-l .curtain-fabric { border-right: 1px solid var(--accent-champagne); }
-        .curtain-r .curtain-fabric { border-left: 1px solid var(--accent-champagne); }
 
         #snowCanvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -303,7 +270,7 @@
         .rsvp-modal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(25px);
-            z-index: 40; display: flex; justify-content: center; align-items: center;
+            z-index: 60; display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .rsvp-modal.active { opacity: 1; pointer-events: auto; }
@@ -318,8 +285,6 @@
         .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
         .btn-submit { flex: 2; padding: 12px; background: var(--text-main); color: #fff; border: none; border-radius: 14px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; cursor: pointer; }
         .btn-close { flex: 1; padding: 12px; background: rgba(0, 0, 0, 0.05); color: var(--text-main); border: none; border-radius: 14px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; cursor: pointer; }
-
-        .open-click-target { position: absolute; inset: 0; z-index: 35; cursor: pointer; }
 
         .replay-btn {
             appearance: none; border: 1px solid var(--accent-champagne); background: transparent;
@@ -382,20 +347,10 @@
             <div class="app-container">
                 <canvas id="snowCanvas"></canvas>
 
-                <div class="envelope-graphic" id="envelopeGraphic">
-                    <div class="env-flap-wrap" id="envFlapWrap">
-                        <div class="env-flap"></div>
-                        <div class="seal" id="seal">
-                            <div class="seal-half seal-left" id="sealInitialsL">C</div>
-                            <div class="seal-half seal-right" id="sealInitialsR">H</div>
-                        </div>
-                    </div>
-                    <p class="tap-hint" id="tapHint">Tik op de envelop om te openen</p>
-                </div>
-
-                <div class="curtains" id="curtains">
-                    <div class="curtain curtain-l" id="curtainL"><div class="curtain-fabric"></div></div>
-                    <div class="curtain curtain-r" id="curtainR"><div class="curtain-fabric"></div></div>
+                <!-- VIDEO ENVELOP OVERLAY -->
+                <div id="videoEnvelopeWrapper" onclick="playEnvelopeVideo()">
+                    <video id="envelopeVideo" src="dia_de_los_muertos.mp4" playsinline muted></video>
+                    <div id="tapHintText">✨ Tik om de uitnodiging te openen</div>
                 </div>
 
                 <div class="card-frame" id="cardFrame">
@@ -440,8 +395,6 @@
                     <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
                 </div>
 
-                <div class="open-click-target" id="openClickTarget"></div>
-
                 <div class="rsvp-modal" id="rsvpModal">
                     <div class="rsvp-form-box">
                         <h2>Aanwezigheid</h2>
@@ -471,14 +424,15 @@
 
             </div>
 
-            <button class="replay-btn" id="replayBtn">Opnieuw Afspelen 🔄</button>
+            <button class="replay-btn" id="replayBtn" onclick="resetEnvelopeVideo()">Opnieuw Afspelen 🔄</button>
         </div>
     </div>
 
-    <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-112191.mp3" loop></audio>
+    <!-- ACHTERGRONDMUZIEK -->
+    <audio id="bgMusic" src="muziek.mp3" loop></audio>
 
     <script>
-        // AUTOMATISCHE REDIRECT VOOR WACHTWOORD RECOVERY (ALS IEMAND OP INDEX LANDT)
+        // AUTOMATISCHE REDIRECT VOOR WACHTWOORD RECOVERY
         if (window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery')) {
             window.location.href = 'admin.html' + window.location.hash;
         }
@@ -521,14 +475,21 @@
         }
 
         const TEMPLATES = {
+            dia_de_los_muertos: {
+                subtitle: "Día de los Muertos • Exclusive Reveal",
+                bgGradient: "linear-gradient(135deg, #0d021a 0%, #1f052d 50%, #05000a 100%)",
+                accentColor: "#e63946",
+                defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
+                cardBg: "linear-gradient(180deg, rgba(20, 15, 25, 0.95) 0%, rgba(10, 5, 15, 0.95) 100%)",
+                textColor: "#ffffff",
+                textSubColor: "#e0aaff"
+            },
             luxury_botanical: {
                 subtitle: "Floral & Botanical Elegance",
                 bgGradient: "linear-gradient(135deg, #1c281a 0%, #2b3a29 50%, #121c1a 100%)",
                 accentColor: "#b59a5b",
                 defaultImage: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 241, 234, 0.96) 100%)",
-                envelopeBg: "linear-gradient(180deg, #3a4a38 0%, #2e3c2c 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #d8c282 0%, #b59a5b 60%, #705b2a 100%)",
                 textColor: "#2b3a29",
                 textSubColor: "#51695a"
             },
@@ -538,8 +499,6 @@
                 accentColor: "#cbb281",
                 defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -549,8 +508,6 @@
                 accentColor: "#a3c4f3",
                 defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 246, 250, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #edf4f8 0%, #d8e5ed 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #cbe3f7 0%, #a3c4f3 60%, #6893cb 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -560,8 +517,6 @@
                 accentColor: "#f72585",
                 defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 240, 245, 0.95) 100%)",
-                envelopeBg: "linear-gradient(180deg, #fdf0f6 0%, #f7d6e6 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #ff70a6 0%, #f72585 60%, #9e1053 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -571,51 +526,48 @@
                 accentColor: "#D42426",
                 defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
-                envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #ff4d4d 0%, #d42426 60%, #7a0c0e 100%)",
                 textColor: "#0A2F1D",
                 textSubColor: "#51695A",
                 music: "https://cdn.pixabay.com/download/audio/2021/11/25/audio_24a2754685.mp3?filename=we-wish-you-a-merry-christmas-126685.mp3"
             }
         };
 
-        // GSAP ANIMATIE VOOR OPENEN ENVELOP
-        gsap.set('#envFlapWrap', { transformPerspective: 900 });
+        // VIDEO REVEAL FUNCTIES
+        function playEnvelopeVideo() {
+            const video = document.getElementById('envelopeVideo');
+            const wrapper = document.getElementById('videoEnvelopeWrapper');
+            const tapHint = document.getElementById('tapHintText');
 
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
+            if (tapHint) tapHint.style.display = 'none';
 
-        tl.to('#sealInitialsL', { xPercent: -60, yPercent: -20, rotate: -25, opacity: 0, duration: 0.4 }, 0)
-          .to('#sealInitialsR', { xPercent: 60, yPercent: -20, rotate: 25, opacity: 0, duration: 0.4 }, 0)
-          .to('#tapHint', { opacity: 0, duration: 0.2 }, 0)
-          .to('#envFlapWrap', { rotationX: -165, duration: 0.7, ease: 'power3.inOut' }, 0.15)
-          .to('#envelopeGraphic', { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.in' }, 0.5)
-          .to('#curtainL', { xPercent: -102, duration: 0.85, ease: 'power3.inOut' }, 0.7)
-          .to('#curtainR', { xPercent: 102, duration: 0.85, ease: 'power3.inOut' }, 0.7)
-          .fromTo('#cardFrame', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6 }, 0.9)
-          .add(() => {
-              document.getElementById('replayBtn').classList.add('is-visible');
-              document.getElementById('openClickTarget').style.display = 'none';
-          });
+            video.play();
 
-        function playEnvelopeAnimation() {
-            tl.play();
             const music = document.getElementById('bgMusic');
-            music.play().catch(() => {});
+            if (music) {
+                music.play().catch(err => console.log("Audio autoplay restriction:", err));
+            }
+
+            video.onended = () => {
+                wrapper.style.transition = 'opacity 0.8s ease';
+                wrapper.style.opacity = '0';
+                setTimeout(() => {
+                    wrapper.style.display = 'none';
+                    document.getElementById('replayBtn').classList.add('is-visible');
+                }, 800);
+            };
         }
 
-        function resetEnvelopeAnimation() {
-            tl.pause(0);
-            gsap.set('#envelopeGraphic', { opacity: 1, scale: 1 });
-            gsap.set('#envFlapWrap', { rotationX: 0 });
-            gsap.set(['#sealInitialsL', '#sealInitialsR'], { xPercent: 0, yPercent: 0, rotate: 0, opacity: 1 });
-            gsap.set(['#curtainL', '#curtainR'], { xPercent: 0 });
-            gsap.set('#tapHint', { opacity: 1 });
+        function resetEnvelopeVideo() {
+            const video = document.getElementById('envelopeVideo');
+            const wrapper = document.getElementById('videoEnvelopeWrapper');
+            const tapHint = document.getElementById('tapHintText');
+
+            video.currentTime = 0;
+            wrapper.style.display = 'flex';
+            wrapper.style.opacity = '1';
+            if (tapHint) tapHint.style.display = 'block';
             document.getElementById('replayBtn').classList.remove('is-visible');
-            document.getElementById('openClickTarget').style.display = 'block';
         }
-
-        document.getElementById('openClickTarget').addEventListener('click', playEnvelopeAnimation);
-        document.getElementById('replayBtn').addEventListener('click', resetEnvelopeAnimation);
 
         async function fetchEventDetails() {
             const tempTemplate = urlParams.get('template');
@@ -624,13 +576,10 @@
             const tempCover = urlParams.get('cover');
 
             if (isPreview && tempTemplate) {
-                const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.wedding;
+                const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
-                if (tempNames) {
-                    document.getElementById('coupleNamesHeading').innerText = tempNames;
-                    setInitials(tempNames);
-                }
+                if (tempNames) document.getElementById('coupleNamesHeading').innerText = tempNames;
                 if (tempDate) {
                     const eventDateObj = new Date(tempDate);
                     document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -647,7 +596,7 @@
             const { data } = await supabaseClient.from('events').select('*').eq('slug', currentSlug).maybeSingle();
 
             if (data) {
-                const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.wedding;
+                const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
                 if (data.template_type === 'christmas') {
@@ -658,10 +607,7 @@
                     if (bgAudio && selectedTemplate.music) bgAudio.src = selectedTemplate.music;
                 }
 
-                if (data.couple_names) {
-                    document.getElementById('coupleNamesHeading').innerText = data.couple_names;
-                    setInitials(data.couple_names);
-                }
+                if (data.couple_names) document.getElementById('coupleNamesHeading').innerText = data.couple_names;
 
                 if (data.event_date) {
                     const eventDateObj = new Date(data.event_date);
@@ -711,23 +657,10 @@
             const subElem = document.querySelector('.subtitle');
             if (subElem) subElem.innerText = theme.subtitle;
             document.documentElement.style.setProperty('--accent-champagne', theme.accentColor);
-            document.documentElement.style.setProperty('--wax-bg', theme.waxBg);
-            document.documentElement.style.setProperty('--envelope-bg', theme.envelopeBg);
             document.documentElement.style.setProperty('--card-bg', theme.cardBg);
             document.documentElement.style.setProperty('--text-main', theme.textColor);
             document.documentElement.style.setProperty('--text-sub', theme.textSubColor);
             document.body.style.background = theme.bgGradient;
-        }
-
-        function setInitials(names) {
-            const namesArr = names.split('&').map(n => n.trim());
-            if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
-                document.getElementById('sealInitialsL').innerText = namesArr[0][0];
-                document.getElementById('sealInitialsR').innerText = namesArr[1][0];
-            } else if (names.length >= 2) {
-                document.getElementById('sealInitialsL').innerText = names[0];
-                document.getElementById('sealInitialsR').innerText = names[1];
-            }
         }
 
         function promptPinCode() {
