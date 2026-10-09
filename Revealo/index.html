@@ -130,7 +130,7 @@
         .feature-card h3 { font-family: var(--font-title); color: var(--accent-champagne); font-size: 1.1rem; margin-bottom: 8px; }
         .feature-card p { font-size: 0.85rem; color: #a0a5b5; }
 
-        /* ---------------- UITNODIGING VIEW (FULL SCREEN WEBPAGINA) ---------------- */
+        /* ---------------- UITNODIGING VIEW STYLES ---------------- */
         #invitationView {
             display: none;
             width: 100%;
@@ -149,7 +149,7 @@
             padding: 40px 20px;
         }
 
-        /* FULLSCREEN GSAP OVERLAY */
+        /* 1. STANDAARD ENVELOP OVERLAY */
         .envelope-graphic {
             position: fixed;
             inset: 0;
@@ -206,6 +206,28 @@
             color: var(--text-sub); text-transform: uppercase; font-weight: 600;
         }
 
+        /* 2. DIA DE LOS MUERTOS AFSPILTSENDE AFBEELDING OVERLAY */
+        #diaOverlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 90;
+            display: none;
+            overflow: hidden;
+            background: #0d021a;
+        }
+
+        .dia-part {
+            position: absolute;
+            left: 0; width: 100%; height: 50vh;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        #diaTop { top: 0; }
+        #diaBottom { bottom: 0; }
+
         .open-click-target { 
             position: fixed; 
             inset: 0; 
@@ -218,7 +240,7 @@
             pointer-events: none; z-index: 15; display: none;
         }
 
-        /* WEBPAGINA INHOUD (GEEN OPCOLLENDE KAART) */
+        /* WEBPAGINA INHOUD */
         .card-frame {
             width: 100%;
             max-width: 520px;
@@ -354,7 +376,7 @@
         <div class="app-container">
             <canvas id="snowCanvas"></canvas>
 
-            <!-- FULLSCREEN GSAP ENVELOP OVERLAY -->
+            <!-- 1. STANDAARD ENVELOP (VOOR OVERIGE THEMA'S) -->
             <div class="envelope-graphic" id="envelopeGraphic">
                 <div class="env-flap-wrap" id="envFlapWrap">
                     <div class="env-flap"></div>
@@ -363,7 +385,14 @@
                         <div class="seal-half seal-right" id="sealInitialsR">H</div>
                     </div>
                 </div>
-                <p class="tap-hint" id="tapHint">Tik op de envelop om te openen</p>
+                <p class="tap-hint" id="tapHint">Tik om de uitnodiging te openen</p>
+            </div>
+
+            <!-- 2. DIA DE LOS MUERTOS DUBBELE AFBEELDING OVERLAY -->
+            <div id="diaOverlay">
+                <img src="dia_top.jpg" id="diaTop" class="dia-part" alt="Top Reveal">
+                <img src="dia_bottom.jpg" id="diaBottom" class="dia-part" alt="Bottom Reveal">
+                <p class="tap-hint" style="z-index: 98; text-shadow: 0 2px 8px #000;">✨ Tik om de uitnodiging te openen</p>
             </div>
 
             <div class="open-click-target" id="openClickTarget"></div>
@@ -467,6 +496,7 @@
         let expectedPin = null;
         let actualLocation = null;
         let isChristmasTheme = false;
+        let activeThemeKey = 'dia_de_los_muertos';
 
         if (isPreview) {
             window.addEventListener('DOMContentLoaded', () => {
@@ -489,8 +519,6 @@
                 bgGradient: "linear-gradient(135deg, #0d021a 0%, #1f052d 50%, #05000a 100%)",
                 accentColor: "#f1c40f",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
-                envelopeBg: "linear-gradient(180deg, #1f052d 0%, #0d021a 100%)",
-                waxBg: "radial-gradient(circle at 35% 35%, #f3e5ab 0%, #f1c40f 60%, #9a7d0a 100%)",
                 textColor: "#ffffff",
                 textSubColor: "#f1c40f"
             },
@@ -547,27 +575,40 @@
             }
         };
 
-        // GSAP ENVELOP ANIMATIE LOGICA
+        // ANIMATIE TIMELINES
         gsap.set('#envFlapWrap', { transformPerspective: 900 });
 
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
+        // 1. Standaard Envelop
+        const tlStandard = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
+        tlStandard.to('#sealInitialsL', { xPercent: -60, yPercent: -20, rotate: -25, opacity: 0, duration: 0.4 }, 0)
+                  .to('#sealInitialsR', { xPercent: 60, yPercent: -20, rotate: 25, opacity: 0, duration: 0.4 }, 0)
+                  .to('#tapHint', { opacity: 0, duration: 0.2 }, 0)
+                  .to('#envFlapWrap', { rotationX: -165, duration: 0.7, ease: 'power3.inOut' }, 0.15)
+                  .to('#envelopeGraphic', { opacity: 0, duration: 0.5, ease: 'power2.in', onComplete: () => {
+                      document.getElementById('envelopeGraphic').style.setProperty('display', 'none', 'important');
+                      document.getElementById('openClickTarget').style.setProperty('display', 'none', 'important');
+                  }}, 0.5)
+                  .fromTo('#cardFrame', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 0.7);
 
-        tl.to('#sealInitialsL', { xPercent: -60, yPercent: -20, rotate: -25, opacity: 0, duration: 0.4 }, 0)
-          .to('#sealInitialsR', { xPercent: 60, yPercent: -20, rotate: 25, opacity: 0, duration: 0.4 }, 0)
-          .to('#tapHint', { opacity: 0, duration: 0.2 }, 0)
-          .to('#envFlapWrap', { rotationX: -165, duration: 0.7, ease: 'power3.inOut' }, 0.15)
-          .to('#envelopeGraphic', { opacity: 0, duration: 0.5, ease: 'power2.in', onComplete: () => {
-              const env = document.getElementById('envelopeGraphic');
-              const target = document.getElementById('openClickTarget');
-              if (env) env.style.setProperty('display', 'none', 'important');
-              if (target) target.style.setProperty('display', 'none', 'important');
-          }}, 0.5)
-          .fromTo('#cardFrame', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 0.7);
+        // 2. Día de los Muertos Afsplitsende Animatie
+        const tlDia = gsap.timeline({ paused: true, defaults: { ease: 'power3.inOut' } });
+        tlDia.to('#diaTop', { y: '-100%', duration: 1.0 }, 0)
+             .to('#diaBottom', { y: '100%', duration: 1.0 }, 0)
+             .to('#diaOverlay', { opacity: 0, duration: 0.3, onComplete: () => {
+                 document.getElementById('diaOverlay').style.setProperty('display', 'none', 'important');
+                 document.getElementById('openClickTarget').style.setProperty('display', 'none', 'important');
+             }}, 0.7)
+             .fromTo('#cardFrame', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 }, 0.4);
 
         function playEnvelopeAnimation() {
-            tl.play();
             const music = document.getElementById('bgMusic');
             if (music) music.play().catch(() => {});
+
+            if (activeThemeKey === 'dia_de_los_muertos') {
+                tlDia.play();
+            } else {
+                tlStandard.play();
+            }
         }
 
         document.getElementById('openClickTarget').addEventListener('click', playEnvelopeAnimation);
@@ -579,6 +620,7 @@
             const tempCover = urlParams.get('cover');
 
             if (isPreview && tempTemplate) {
+                activeThemeKey = tempTemplate;
                 const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
@@ -602,7 +644,8 @@
             const { data } = await supabaseClient.from('events').select('*').eq('slug', currentSlug).maybeSingle();
 
             if (data) {
-                const selectedTemplate = TEMPLATES[data.template_type] || TEMPLATES.dia_de_los_muertos;
+                activeThemeKey = data.template_type || 'dia_de_los_muertos';
+                const selectedTemplate = TEMPLATES[activeThemeKey] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
                 if (data.template_type === 'christmas') {
@@ -666,8 +709,17 @@
             const subElem = document.querySelector('.subtitle');
             if (subElem) subElem.innerText = theme.subtitle;
             document.documentElement.style.setProperty('--accent-champagne', theme.accentColor);
-            if (theme.envelopeBg) document.documentElement.style.setProperty('--envelope-bg', theme.envelopeBg);
-            if (theme.waxBg) document.documentElement.style.setProperty('--wax-bg', theme.waxBg);
+            
+            if (activeThemeKey === 'dia_de_los_muertos') {
+                document.getElementById('envelopeGraphic').style.display = 'none';
+                document.getElementById('diaOverlay').style.display = 'block';
+            } else {
+                document.getElementById('envelopeGraphic').style.display = 'flex';
+                document.getElementById('diaOverlay').style.display = 'none';
+                if (theme.envelopeBg) document.documentElement.style.setProperty('--envelope-bg', theme.envelopeBg);
+                if (theme.waxBg) document.documentElement.style.setProperty('--wax-bg', theme.waxBg);
+            }
+
             document.documentElement.style.setProperty('--text-main', theme.textColor);
             document.documentElement.style.setProperty('--text-sub', theme.textSubColor);
             document.body.style.background = theme.bgGradient;
