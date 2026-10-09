@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <style>
         :root {
@@ -20,6 +21,8 @@
             --text-sub: #f1c40f;
             --font-title: 'Cinzel', serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --wax-bg: radial-gradient(circle at 35% 35%, #f3e5ab 0%, #f1c40f 60%, #9a7d0a 100%);
+            --envelope-bg: linear-gradient(180deg, #1f052d 0%, #0d021a 100%);
             --card-bg: linear-gradient(180deg, rgba(25, 12, 38, 0.98) 0%, rgba(10, 3, 18, 0.98) 100%);
         }
 
@@ -171,38 +174,58 @@
             }
         }
 
-        /* VIDEO OVERLAY STYLES */
-        #videoEnvelopeWrapper {
+        /* GSAP ENVELOP STYLES */
+        .envelope-graphic {
             position: absolute;
             inset: 0;
-            z-index: 50;
-            background: #0d021a;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            z-index: 30;
+            background: var(--envelope-bg);
         }
 
-        #envelopeVideo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: #0d021a;
-        }
-
-        #tapHintText {
+        .env-flap-wrap {
             position: absolute;
-            bottom: 40px;
-            color: #ffffff;
-            font-size: 11px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            font-family: var(--font-body);
-            font-weight: 600;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
-            pointer-events: none;
+            left: 0; right: 0; top: 0;
+            height: 50%;
+            transform-style: preserve-3d;
+            transform-origin: 50% 0%;
+            z-index: 32;
         }
+
+        .env-flap {
+            position: absolute; inset: 0;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .seal {
+            position: absolute;
+            left: 50%; top: 88%;
+            width: 64px; height: 64px;
+            transform: translate(-50%, -50%);
+            z-index: 33;
+            cursor: pointer;
+        }
+
+        .seal-half {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            background: var(--wax-bg);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5), inset 0 2px 2px rgba(255, 255, 255, 0.8);
+            display: flex; justify-content: center; align-items: center;
+            font-family: var(--font-title); color: #0b0c10; font-size: 18px; font-weight: 700;
+        }
+
+        .seal-left { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+        .seal-right { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+
+        .tap-hint {
+            position: absolute; left: 0; right: 0; bottom: 40px; z-index: 31;
+            text-align: center; font-size: 10px; letter-spacing: 3.5px;
+            color: var(--text-sub); text-transform: uppercase; font-weight: 600;
+        }
+
+        .open-click-target { position: absolute; inset: 0; z-index: 35; cursor: pointer; }
 
         #snowCanvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -340,10 +363,19 @@
             <div class="app-container">
                 <canvas id="snowCanvas"></canvas>
 
-                <div id="videoEnvelopeWrapper" onclick="playEnvelopeVideo()">
-                    <video id="envelopeVideo" src="dia_de_los_muertos.gif" playsinline muted></video>
-                    <div id="tapHintText">✨ Tik om de uitnodiging te openen</div>
+                <!-- GSAP ENVELOP GRAPHIC -->
+                <div class="envelope-graphic" id="envelopeGraphic">
+                    <div class="env-flap-wrap" id="envFlapWrap">
+                        <div class="env-flap"></div>
+                        <div class="seal" id="seal">
+                            <div class="seal-half seal-left" id="sealInitialsL">C</div>
+                            <div class="seal-half seal-right" id="sealInitialsR">H</div>
+                        </div>
+                    </div>
+                    <p class="tap-hint" id="tapHint">Tik op de envelop om te openen</p>
                 </div>
+
+                <div class="open-click-target" id="openClickTarget"></div>
 
                 <div class="card-frame" id="cardFrame">
                     <div>
@@ -468,6 +500,8 @@
                 accentColor: "#f1c40f",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(25, 12, 38, 0.98) 0%, rgba(10, 3, 18, 0.98) 100%)",
+                envelopeBg: "linear-gradient(180deg, #1f052d 0%, #0d021a 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #f3e5ab 0%, #f1c40f 60%, #9a7d0a 100%)",
                 textColor: "#ffffff",
                 textSubColor: "#f1c40f"
             },
@@ -477,6 +511,8 @@
                 accentColor: "#b59a5b",
                 defaultImage: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 241, 234, 0.96) 100%)",
+                envelopeBg: "linear-gradient(180deg, #3a4a38 0%, #2e3c2c 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #d8c282 0%, #b59a5b 60%, #705b2a 100%)",
                 textColor: "#2b3a29",
                 textSubColor: "#51695a"
             },
@@ -486,6 +522,8 @@
                 accentColor: "#cbb281",
                 defaultImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 239, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #f7f5f0 0%, #eae5dc 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #e8d5b5 0%, #cbb281 60%, #8a7246 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -495,6 +533,8 @@
                 accentColor: "#a3c4f3",
                 defaultImage: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 246, 250, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #edf4f8 0%, #d8e5ed 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #cbe3f7 0%, #a3c4f3 60%, #6893cb 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -504,6 +544,8 @@
                 accentColor: "#f72585",
                 defaultImage: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 240, 245, 0.95) 100%)",
+                envelopeBg: "linear-gradient(180deg, #fdf0f6 0%, #f7d6e6 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff70a6 0%, #f72585 60%, #9e1053 100%)",
                 textColor: "#1c1d21",
                 textSubColor: "#5e626e"
             },
@@ -513,34 +555,36 @@
                 accentColor: "#D42426",
                 defaultImage: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
                 cardBg: "linear-gradient(180deg, rgba(253, 248, 240, 0.96) 0%, rgba(245, 235, 220, 0.96) 100%)",
+                envelopeBg: "linear-gradient(180deg, #12452B 0%, #082919 100%)",
+                waxBg: "radial-gradient(circle at 35% 35%, #ff4d4d 0%, #d42426 60%, #7a0c0e 100%)",
                 textColor: "#0A2F1D",
                 textSubColor: "#51695A",
                 music: "https://cdn.pixabay.com/download/audio/2021/11/25/audio_24a2754685.mp3?filename=we-wish-you-a-merry-christmas-126685.mp3"
             }
         };
 
-        function playEnvelopeVideo() {
-            const video = document.getElementById('envelopeVideo');
-            const wrapper = document.getElementById('videoEnvelopeWrapper');
-            const tapHint = document.getElementById('tapHintText');
+        // GSAP OPEN ANIMATIE
+        gsap.set('#envFlapWrap', { transformPerspective: 900 });
 
-            if (tapHint) tapHint.style.display = 'none';
+        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
 
-            video.play();
+        tl.to('#sealInitialsL', { xPercent: -60, yPercent: -20, rotate: -25, opacity: 0, duration: 0.4 }, 0)
+          .to('#sealInitialsR', { xPercent: 60, yPercent: -20, rotate: 25, opacity: 0, duration: 0.4 }, 0)
+          .to('#tapHint', { opacity: 0, duration: 0.2 }, 0)
+          .to('#envFlapWrap', { rotationX: -165, duration: 0.7, ease: 'power3.inOut' }, 0.15)
+          .to('#envelopeGraphic', { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.in' }, 0.5)
+          .fromTo('#cardFrame', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6 }, 0.7)
+          .add(() => {
+              document.getElementById('openClickTarget').style.display = 'none';
+          });
 
+        function playEnvelopeAnimation() {
+            tl.play();
             const music = document.getElementById('bgMusic');
-            if (music) {
-                music.play().catch(err => console.log("Audio autoplay restriction:", err));
-            }
-
-            video.onended = () => {
-                wrapper.style.transition = 'opacity 0.8s ease';
-                wrapper.style.opacity = '0';
-                setTimeout(() => {
-                    wrapper.style.display = 'none';
-                }, 800);
-            };
+            if (music) music.play().catch(() => {});
         }
+
+        document.getElementById('openClickTarget').addEventListener('click', playEnvelopeAnimation);
 
         async function fetchEventDetails() {
             const tempTemplate = urlParams.get('template');
@@ -552,7 +596,10 @@
                 const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
-                if (tempNames) document.getElementById('coupleNamesHeading').innerText = tempNames;
+                if (tempNames) {
+                    document.getElementById('coupleNamesHeading').innerText = tempNames;
+                    setInitials(tempNames);
+                }
                 if (tempDate) {
                     const eventDateObj = new Date(tempDate);
                     document.getElementById('eventDateText').innerText = eventDateObj.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -580,7 +627,10 @@
                     if (bgAudio && selectedTemplate.music) bgAudio.src = selectedTemplate.music;
                 }
 
-                if (data.couple_names) document.getElementById('coupleNamesHeading').innerText = data.couple_names;
+                if (data.couple_names) {
+                    document.getElementById('coupleNamesHeading').innerText = data.couple_names;
+                    setInitials(data.couple_names);
+                }
 
                 if (data.event_date) {
                     const eventDateObj = new Date(data.event_date);
@@ -631,9 +681,22 @@
             if (subElem) subElem.innerText = theme.subtitle;
             document.documentElement.style.setProperty('--accent-champagne', theme.accentColor);
             document.documentElement.style.setProperty('--card-bg', theme.cardBg);
+            if (theme.envelopeBg) document.documentElement.style.setProperty('--envelope-bg', theme.envelopeBg);
+            if (theme.waxBg) document.documentElement.style.setProperty('--wax-bg', theme.waxBg);
             document.documentElement.style.setProperty('--text-main', theme.textColor);
             document.documentElement.style.setProperty('--text-sub', theme.textSubColor);
             document.body.style.background = theme.bgGradient;
+        }
+
+        function setInitials(names) {
+            const namesArr = names.split('&').map(n => n.trim());
+            if (namesArr.length === 2 && namesArr[0] && namesArr[1]) {
+                document.getElementById('sealInitialsL').innerText = namesArr[0][0];
+                document.getElementById('sealInitialsR').innerText = namesArr[1][0];
+            } else if (names.length >= 2) {
+                document.getElementById('sealInitialsL').innerText = names[0];
+                document.getElementById('sealInitialsR').innerText = names[1];
+            }
         }
 
         function promptPinCode() {
