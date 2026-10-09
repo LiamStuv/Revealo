@@ -44,6 +44,33 @@
             transition: background 0.5s ease;
         }
 
+        /* MUTE / UNMUTE BUTTON */
+        .music-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 150;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(13, 2, 26, 0.75);
+            border: 1px solid var(--accent-champagne);
+            color: var(--accent-champagne);
+            font-size: 18px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .music-toggle-btn:active {
+            transform: scale(0.92);
+        }
+
         /* ---------------- LANDINGSPAGINA STYLES ---------------- */
         #landingView {
             display: none;
@@ -413,6 +440,9 @@
 
 <body>
 
+    <!-- MUTE / UNMUTE BUTTON -->
+    <button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleAudio()"></button>
+
     <div id="landingView">
         <div class="landing-header">
             <img src="revealo_logo.jpg" alt="Revealo Logo" class="landing-logo">
@@ -701,15 +731,36 @@
 
         function playEnvelopeAnimation() {
             const music = document.getElementById('bgMusic');
-            if (music) {
+            const toggleBtn = document.getElementById('musicToggleBtn');
+            
+            if (music && music.src) {
                 music.currentTime = 0;
-                music.play().catch(err => console.log("Audio autoplay restricted:", err));
+                music.play().then(() => {
+                    if (toggleBtn) {
+                        toggleBtn.style.display = 'flex';
+                        toggleBtn.innerText = '🔊';
+                    }
+                }).catch(err => console.log("Audio autoplay restricted:", err));
             }
 
             if (activeThemeKey === 'dia_de_los_muertos') {
                 tlDia.play();
             } else {
                 tlStandard.play();
+            }
+        }
+
+        function toggleAudio() {
+            const music = document.getElementById('bgMusic');
+            const toggleBtn = document.getElementById('musicToggleBtn');
+            if (!music) return;
+
+            if (music.paused) {
+                music.play();
+                toggleBtn.innerText = '🔊';
+            } else {
+                music.pause();
+                toggleBtn.innerText = '🔇';
             }
         }
 
@@ -1117,25 +1168,27 @@ END:VCALENDAR`;
             setInterval(drawFlakes, 33);
         }
 
-        // DÍA DE LOS MUERTOS GOUDSBLOEM / OFRENDA VONKJES EFFECT
+        // GROTERE & REALISTISCHERE DÍA DE LOS MUERTOS GOUDSBLOEM / PETAL VONKJES EFFECT
         function initMarigolds() {
             const canvas = document.getElementById('snowCanvas');
             const ctx = canvas.getContext('2d');
             let width = canvas.width = window.innerWidth;
             let height = canvas.height = window.innerHeight;
-            const numPetals = 45;
+            const numPetals = 40;
             const petals = [];
 
-            const colors = ['rgba(241, 196, 15, 0.7)', 'rgba(230, 126, 34, 0.8)', 'rgba(231, 76, 60, 0.6)'];
+            const colors = ['rgba(241, 196, 15, 0.75)', 'rgba(230, 126, 34, 0.85)', 'rgba(231, 76, 60, 0.7)'];
 
             for (let i = 0; i < numPetals; i++) {
                 petals.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    r: Math.random() * 3 + 1.5,
-                    d: Math.random() * 0.8 + 0.3,
+                    rx: Math.random() * 6 + 4, // Vergroot van 1.5-3px naar 4-10px
+                    ry: Math.random() * 3 + 2,
+                    d: Math.random() * 0.8 + 0.4,
                     color: colors[Math.floor(Math.random() * colors.length)],
-                    angle: Math.random() * 360
+                    angle: Math.random() * Math.PI * 2,
+                    spin: (Math.random() - 0.5) * 0.04
                 });
             }
 
@@ -1143,10 +1196,14 @@ END:VCALENDAR`;
                 ctx.clearRect(0, 0, width, height);
                 for (let i = 0; i < numPetals; i++) {
                     const p = petals[i];
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle);
                     ctx.fillStyle = p.color;
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+                    ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
                     ctx.fill();
+                    ctx.restore();
                 }
                 movePetals();
             }
@@ -1154,10 +1211,11 @@ END:VCALENDAR`;
             function movePetals() {
                 for (let i = 0; i < numPetals; i++) {
                     const p = petals[i];
-                    p.y += Math.pow(p.d, 1.5) + 0.3;
-                    p.x += Math.sin(p.y / 30) * 0.8;
-                    if (p.y > height) {
-                        petals[i] = { x: Math.random() * width, y: 0, r: p.r, d: p.d, color: p.color, angle: p.angle };
+                    p.y += Math.pow(p.d, 1.4) + 0.5;
+                    p.x += Math.sin(p.y / 25) * 1.2;
+                    p.angle += p.spin;
+                    if (p.y > height + 10) {
+                        petals[i] = { x: Math.random() * width, y: -10, rx: p.rx, ry: p.ry, d: p.d, color: p.color, angle: Math.random() * Math.PI * 2, spin: p.spin };
                     }
                 }
             }
