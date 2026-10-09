@@ -899,53 +899,13 @@
             }
         }
 
-        async function generateGoogleWalletPass() {
-            if (isPreview) {
-                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
-                return;
-            }
+function clickAppleWallet() {
+    alert(" Apple Wallet Passes\n\nDeze functie wordt momenteel geactiveerd voor de komende pilot-events. Binnenkort sla je jouw uitnodiging met één tik op in je Wallet!");
+}
 
-            try {
-                const guestName = prompt("Voer je naam in voor op de Google Wallet pas:") || "Gast van Revealo";
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-google-wallet-pass`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({
-                        eventSlug: currentSlug || 'default',
-                        guestName: guestName,
-                        theme: isChristmasTheme ? 'christmas' : 'standard'
-                    })
-                });
-
-                const data = await response.json();
-                if (data.saveUrl) {
-                    const objectIdMatch = data.saveUrl.split('/').pop();
-                    if (objectIdMatch) {
-                        try {
-                            await supabaseClient.from('wallet_passes').insert([
-                                { event_slug: currentSlug || 'default', guest_name: guestName, object_id: objectIdMatch }
-                            ]);
-                        } catch (dbErr) { console.log(dbErr); }
-                    }
-                    window.location.href = data.saveUrl;
-                } else {
-                    alert("Er ging iets mis bij het genereren van de pas: " + (data.error || "Onbekende fout"));
-                }
-            } catch (err) {
-                alert("Fout bij verbinden met server: " + err.message);
-            }
-        }
-
-        function clickAppleWallet() {
-            if (isPreview) {
-                alert("🔒 Digital Wallet Passes zijn uitgeschakeld in de proefversie.");
-                return;
-            }
-            alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
-        }
+function generateGoogleWalletPass() {
+    alert("G Google Wallet Passes\n\nWe leggen momenteel de laatste hand aan de live notificatie-koppeling met Google. Deze functie is binnenkort beschikbaar voor al jouw gasten!");
+}
 
         // DYNAMISCHE DTM AGENDAGENERING VOOR .ICS EXPORT
         function downloadCalendar() {
