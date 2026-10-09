@@ -241,7 +241,6 @@
         #diaTop { top: 0; }
         #diaBottom { bottom: 0; }
 
-        /* MOBIELVRIENDELIJKE SCHAALBARE TAP-HINT BUTTON */
         #diaOverlay .tap-hint {
             position: absolute;
             top: 50%;
@@ -295,7 +294,6 @@
         .names { font-family: var(--font-title); font-size: 42px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .date { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-sub); font-weight: 600; margin-bottom: 24px; }
 
-        /* LUXE EVENT INFO BOX */
         .event-info-box {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -593,7 +591,7 @@
         let actualLocation = null;
         let isChristmasTheme = false;
         let activeThemeKey = 'dia_de_los_muertos';
-        let currentEventData = null; // Bewaart de dynamische gegevens voor de .ics export
+        let currentEventData = null;
 
         if (isPreview) {
             window.addEventListener('DOMContentLoaded', () => {
@@ -615,12 +613,13 @@
                 subtitle: "Día de los Muertos • Exclusive Reveal",
                 bgGradient: `
                     radial-gradient(circle at 50% 35%, rgba(45, 12, 68, 0.85) 0%, rgba(13, 2, 26, 0.98) 75%),
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
                 `,
                 accentColor: "#f1c40f",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
                 textColor: "#ffffff",
-                textSubColor: "#f1c40f"
+                textSubColor: "#f1c40f",
+                music: "dia_music.mp3"
             },
             luxury_botanical: {
                 subtitle: "Floral & Botanical Elegance",
@@ -702,7 +701,10 @@
 
         function playEnvelopeAnimation() {
             const music = document.getElementById('bgMusic');
-            if (music) music.play().catch(() => {});
+            if (music) {
+                music.currentTime = 0;
+                music.play().catch(err => console.log("Audio autoplay restricted:", err));
+            }
 
             if (activeThemeKey === 'dia_de_los_muertos') {
                 tlDia.play();
@@ -758,8 +760,6 @@
                     isChristmasTheme = true;
                     document.getElementById('snowCanvas').style.display = 'block';
                     initSnow();
-                    const bgAudio = document.getElementById('bgMusic');
-                    if (bgAudio && selectedTemplate.music) bgAudio.src = selectedTemplate.music;
                 } else if (data.template_type === 'dia_de_los_muertos') {
                     document.getElementById('snowCanvas').style.display = 'block';
                     initMarigolds();
@@ -819,6 +819,11 @@
             if (subElem) subElem.innerText = theme.subtitle;
             document.documentElement.style.setProperty('--accent-champagne', theme.accentColor);
             
+            const bgAudio = document.getElementById('bgMusic');
+            if (bgAudio && theme.music) {
+                bgAudio.src = theme.music;
+            }
+
             if (activeThemeKey === 'dia_de_los_muertos') {
                 document.getElementById('envelopeGraphic').style.display = 'none';
                 document.getElementById('diaOverlay').style.display = 'block';
