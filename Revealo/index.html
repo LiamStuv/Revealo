@@ -149,7 +149,7 @@
             padding: 40px 20px;
         }
 
-        /* 1. STANDAARD ENVELOP OVERLAY */
+        /* 1. STANDAARD ENVELOP (VOOR OVERIGE THEMA'S) */
         .envelope-graphic {
             position: fixed;
             inset: 0;
@@ -206,57 +206,73 @@
             color: var(--text-sub); text-transform: uppercase; font-weight: 600;
         }
 
-      /* 2. DIA DE LOS MUERTOS DUBBELE AFBEELDING OVERLAY */
-#diaOverlay {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 90;
-    display: none;
-    overflow: hidden;
-    background: #0d021a;
-}
+        /* 2. DIA DE LOS MUERTOS DUBBELE AFBEELDING OVERLAY (SLUIT 100% NAADLOOS AAN) */
+        #diaOverlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 90;
+            display: none;
+            overflow: hidden;
+            background: #0d021a;
+        }
 
-.dia-part {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 50vh;
-    object-fit: cover;
-}
+        .dia-half {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
+        }
 
-#diaTop {
-    top: 0;
-    object-position: bottom center; /* Sluit onderaan naadloos aan */
-}
+        #diaTopContainer {
+            top: 0;
+        }
 
-#diaBottom {
-    bottom: 0;
-    object-position: top center; /* Sluit bovenaan naadloos aan */
-}
+        #diaBottomContainer {
+            bottom: 0;
+        }
 
-/* Tekst mooi in het midden van het scherm plaatsen */
-#diaOverlay .tap-hint {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    bottom: auto;
-    z-index: 98;
-    background: rgba(13, 2, 26, 0.7);
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: 1px solid var(--accent-champagne);
-    color: var(--accent-champagne);
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 700;
-    white-space: nowrap;
-    pointer-events: none;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
+        .dia-part {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Laat de bovenste foto vanaf de bovenkant van het scherm naar beneden lopen */
+        #diaTop {
+            top: 0;
+        }
+
+        /* Laat de onderste foto exact vanaf de onderkant van het scherm naar boven lopen */
+        #diaBottom {
+            bottom: 0;
+        }
+
+        #diaOverlay .tap-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            z-index: 98;
+            background: rgba(13, 2, 26, 0.85);
+            padding: 12px 24px;
+            border-radius: 24px;
+            border: 1px solid var(--accent-champagne);
+            color: var(--accent-champagne);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
 
         .open-click-target { 
             position: fixed; 
@@ -420,9 +436,13 @@
 
             <!-- 2. DIA DE LOS MUERTOS DUBBELE AFBEELDING OVERLAY -->
             <div id="diaOverlay">
-                <img src="dia_top.PNG" id="diaTop" class="dia-part" alt="Top Reveal">
-                <img src="dia_bottom.png" id="diaBottom" class="dia-part" alt="Bottom Reveal">
-                <p class="tap-hint" style="z-index: 98; text-shadow: 0 2px 8px #000;">✨ Tik om de uitnodiging te openen</p>
+                <div class="dia-half" id="diaTopContainer">
+                    <img src="dia_top.PNG" id="diaTop" class="dia-part" alt="Top Reveal">
+                </div>
+                <div class="dia-half" id="diaBottomContainer">
+                    <img src="dia_bottom.png" id="diaBottom" class="dia-part" alt="Bottom Reveal">
+                </div>
+                <p class="tap-hint">✨ Tik om de uitnodiging te openen</p>
             </div>
 
             <div class="open-click-target" id="openClickTarget"></div>
@@ -622,8 +642,8 @@
 
         // 2. Día de los Muertos Afsplitsende Animatie
         const tlDia = gsap.timeline({ paused: true, defaults: { ease: 'power3.inOut' } });
-        tlDia.to('#diaTop', { y: '-100%', duration: 1.0 }, 0)
-             .to('#diaBottom', { y: '100%', duration: 1.0 }, 0)
+        tlDia.to('#diaTopContainer', { y: '-100%', duration: 1.0 }, 0)
+             .to('#diaBottomContainer', { y: '100%', duration: 1.0 }, 0)
              .to('#diaOverlay', { opacity: 0, duration: 0.3, onComplete: () => {
                  document.getElementById('diaOverlay').style.setProperty('display', 'none', 'important');
                  document.getElementById('openClickTarget').style.setProperty('display', 'none', 'important');
