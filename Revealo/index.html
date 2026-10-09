@@ -1063,12 +1063,15 @@
             alert("G Google Wallet Passes\n\nWe leggen momenteel de laatste hand aan de live notificatie-koppeling met Google. Deze functie is binnenkort beschikbaar voor al jouw gasten!");
         }
 
-        // DYNAMISCHE DTM AGENDAGENERING VOOR .ICS EXPORT
+        // DYNAMISCHE DTM AGENDAGENERING VOOR .ICS EXPORT MET EVENEMENT-LINK
         function downloadCalendar() {
             const eventTitle = currentEventData ? (currentEventData.couple_names || 'Uitnodiging Revealo') : 'Uitnodiging Revealo';
-            const locationStr = actualLocation ? actualLocation.replace(/\n/g, ', ') : 'Zie uitnodiging link';
-            const customMessage = currentEventData && currentEventData.custom_message ? currentEventData.custom_message.replace(/\n/g, ' ') : 'Bekijk je digitale uitnodiging voor alle details!';
+            const pageUrl = window.location.href; // Haalt automatisch de exacte event URL op
+            const locationStr = actualLocation ? actualLocation.replace(/\n/g, ', ') : pageUrl;
             
+            let customMessage = currentEventData && currentEventData.custom_message ? currentEventData.custom_message.replace(/\n/g, ' ') : 'Bekijk je digitale uitnodiging voor alle details!';
+            customMessage += `\\n\\nBekijk je digitale uitnodiging op: ${pageUrl}`;
+
             let startDateFormatted = '20270615T140000Z';
             let endDateFormatted = '20270615T230000Z';
 
@@ -1097,6 +1100,7 @@ BEGIN:VEVENT
 SUMMARY:${eventTitle}
 DESCRIPTION:${customMessage}
 LOCATION:${locationStr}
+URL:${pageUrl}
 DTSTART:${startDateFormatted}
 DTEND:${endDateFormatted}
 END:VEVENT
