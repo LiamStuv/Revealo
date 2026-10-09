@@ -254,14 +254,14 @@
             border-radius: 24px;
             border: 1px solid var(--accent-champagne);
             color: var(--accent-champagne);
-            font-size: clamp(9px, 2.8vw, 11px); /* Schaalt automatisch op kleine schermen */
+            font-size: clamp(9px, 2.8vw, 11px);
             letter-spacing: 1.5px;
             text-transform: uppercase;
             font-weight: 700;
             width: 88%;
             max-width: 320px;
             text-align: center;
-            white-space: normal; /* Maakt afbreken mogelijk als het scherm té smal is */
+            white-space: normal;
             pointer-events: none;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
         }
@@ -295,22 +295,71 @@
         .names { font-family: var(--font-title); font-size: 42px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .date { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-sub); font-weight: 600; margin-bottom: 24px; }
 
+        /* LUXE EVENT INFO BOX */
         .event-info-box {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(16px);
-            border-radius: 20px;
-            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(241, 196, 15, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
             width: 100%;
-            font-size: 13px;
-            color: #ffffff;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .event-info-item { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
-        .pin-unlock-btn { background: rgba(255, 255, 255, 0.1); border: 1px dashed var(--accent-champagne); padding: 8px 16px; border-radius: 12px; font-size: 11px; font-weight: 600; color: var(--accent-champagne); cursor: pointer; margin-top: 6px; }
-        .custom-message-text { font-size: 13px; font-style: italic; color: #e0aaff; margin-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; }
+        .event-info-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .event-info-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .event-info-item .icon {
+            font-size: 14px;
+            filter: drop-shadow(0 2px 4px rgba(241, 196, 15, 0.4));
+        }
+
+        .pin-unlock-btn { 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px dashed var(--accent-champagne); 
+            padding: 6px 12px; 
+            border-radius: 12px; 
+            font-size: 10px; 
+            font-weight: 600; 
+            color: var(--accent-champagne); 
+            cursor: pointer; 
+        }
+
+        .custom-message-text { 
+            background: rgba(241, 196, 15, 0.08);
+            border: 1px dashed rgba(241, 196, 15, 0.3);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 12px; 
+            font-style: italic; 
+            color: var(--accent-champagne); 
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
         .scratch-container {
             position: relative; 
@@ -447,14 +496,19 @@
                 </div>
 
                 <div class="event-info-box" id="eventInfoBox" style="display:none;">
-                    <div class="event-info-item" id="timeDisplay" style="display:none;">
-                        <span>🕒</span> <span id="timeText"></span>
+                    <div class="event-info-main">
+                        <div class="event-info-item" id="timeDisplay" style="display:none;">
+                            <span class="icon">🕒</span> 
+                            <span id="timeText"></span>
+                        </div>
+
+                        <div class="event-info-item" id="locationDisplay" style="display:none;">
+                            <span class="icon">📍</span>
+                            <span id="locationText" style="display:none;"></span>
+                            <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in voor adres</button>
+                        </div>
                     </div>
-                    <div class="event-info-item" id="locationDisplay" style="display:none; margin-top:2px;">
-                        <span>📍</span>
-                        <span id="locationText" style="display:none;"></span>
-                        <button class="pin-unlock-btn" id="pinUnlockBtn" onclick="promptPinCode()">🔒 Voer PIN in om adres te zien</button>
-                    </div>
+
                     <div class="custom-message-text" id="customMessageDisplay" style="display:none;"></div>
                 </div>
 
@@ -561,7 +615,7 @@
                 subtitle: "Día de los Muertos • Exclusive Reveal",
                 bgGradient: `
                     radial-gradient(circle at 50% 35%, rgba(45, 12, 68, 0.85) 0%, rgba(13, 2, 26, 0.98) 75%),
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8 2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
                 `,
                 accentColor: "#f1c40f",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
@@ -750,7 +804,7 @@
                     hasExtraInfo = true;
                 }
 
-                if (hasExtraInfo) document.getElementById('eventInfoBox').style.display = 'block';
+                if (hasExtraInfo) document.getElementById('eventInfoBox').style.display = 'flex';
 
                 if (data.rsvp_open === false) document.getElementById('rsvpBtn').style.display = 'none';
 
@@ -899,13 +953,13 @@
             }
         }
 
-function clickAppleWallet() {
-    alert(" Apple Wallet Passes\n\nDeze functie wordt momenteel geactiveerd voor de komende pilot-events. Binnenkort sla je jouw uitnodiging met één tik op in je Wallet!");
-}
+        function clickAppleWallet() {
+            alert(" Apple Wallet Passes\n\nDeze functie wordt momenteel geactiveerd voor de komende pilot-events. Binnenkort sla je jouw uitnodiging met één tik op in je Wallet!");
+        }
 
-function generateGoogleWalletPass() {
-    alert("G Google Wallet Passes\n\nWe leggen momenteel de laatste hand aan de live notificatie-koppeling met Google. Deze functie is binnenkort beschikbaar voor al jouw gasten!");
-}
+        function generateGoogleWalletPass() {
+            alert("G Google Wallet Passes\n\nWe leggen momenteel de laatste hand aan de live notificatie-koppeling met Google. Deze functie is binnenkort beschikbaar voor al jouw gasten!");
+        }
 
         // DYNAMISCHE DTM AGENDAGENERING VOOR .ICS EXPORT
         function downloadCalendar() {
@@ -919,7 +973,6 @@ function generateGoogleWalletPass() {
             if (currentEventData && currentEventData.event_date) {
                 const eventDateClean = currentEventData.event_date.replace(/-/g, '');
                 
-                // Probeer tijd te extraheren als deze ingevuld is (bijv. "14:00")
                 let timeStr = '140000';
                 if (currentEventData.event_time) {
                     const timeMatch = currentEventData.event_time.match(/(\d{1,2})[:.](\d{2})/);
