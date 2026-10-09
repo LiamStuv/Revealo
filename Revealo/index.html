@@ -241,6 +241,7 @@
         #diaTop { top: 0; }
         #diaBottom { bottom: 0; }
 
+        /* MOBIELVRIENDELIJKE SCHAALBARE TAP-HINT BUTTON */
         #diaOverlay .tap-hint {
             position: absolute;
             top: 50%;
@@ -248,16 +249,19 @@
             transform: translate(-50%, -50%);
             bottom: auto;
             z-index: 98;
-            background: rgba(13, 2, 26, 0.85);
-            padding: 12px 24px;
+            background: rgba(13, 2, 26, 0.88);
+            padding: 10px 18px;
             border-radius: 24px;
             border: 1px solid var(--accent-champagne);
             color: var(--accent-champagne);
-            font-size: 11px;
-            letter-spacing: 2px;
+            font-size: clamp(9px, 2.8vw, 11px); /* Schaalt automatisch op kleine schermen */
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             font-weight: 700;
-            white-space: nowrap;
+            width: 88%;
+            max-width: 320px;
+            text-align: center;
+            white-space: normal; /* Maakt afbreken mogelijk als het scherm té smal is */
             pointer-events: none;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
         }
@@ -430,7 +434,7 @@
                 <div class="dia-half" id="diaBottomContainer">
                     <img src="dia_bottom.png" id="diaBottom" class="dia-part" alt="Bottom Reveal">
                 </div>
-                <p class="tap-hint">✨ Tik om de uitnodiging te openen</p>
+                <p class="tap-hint">✨ Tik om te openen</p>
             </div>
 
             <div class="open-click-target" id="openClickTarget"></div>
@@ -535,6 +539,7 @@
         let actualLocation = null;
         let isChristmasTheme = false;
         let activeThemeKey = 'dia_de_los_muertos';
+        let currentEventData = null; // Bewaart de dynamische gegevens voor de .ics export
 
         if (isPreview) {
             window.addEventListener('DOMContentLoaded', () => {
@@ -556,7 +561,7 @@
                 subtitle: "Día de los Muertos • Exclusive Reveal",
                 bgGradient: `
                     radial-gradient(circle at 50% 35%, rgba(45, 12, 68, 0.85) 0%, rgba(13, 2, 26, 0.98) 75%),
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1-1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8 2-1.8 3 0 5-1.2 5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8 2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8 2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
                 `,
                 accentColor: "#f1c40f",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
@@ -665,6 +670,11 @@
                 const selectedTemplate = TEMPLATES[tempTemplate] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
 
+                currentEventData = {
+                    couple_names: tempNames || 'Voorbeeld Uitnodiging',
+                    event_date: tempDate || new Date().toISOString().split('T')[0]
+                };
+
                 if (tempNames) {
                     document.getElementById('coupleNamesHeading').innerText = tempNames;
                     setInitials(tempNames);
@@ -685,6 +695,7 @@
             const { data } = await supabaseClient.from('events').select('*').eq('slug', currentSlug).maybeSingle();
 
             if (data) {
+                currentEventData = data;
                 activeThemeKey = data.template_type || 'dia_de_los_muertos';
                 const selectedTemplate = TEMPLATES[activeThemeKey] || TEMPLATES.dia_de_los_muertos;
                 applyTheme(selectedTemplate);
@@ -936,23 +947,51 @@
             alert("Apple Wallet integratie wordt geactiveerd bij de eerste pilot events!");
         }
 
+        // DYNAMISCHE DTM AGENDAGENERING VOOR .ICS EXPORT
         function downloadCalendar() {
+            const eventTitle = currentEventData ? (currentEventData.couple_names || 'Uitnodiging Revealo') : 'Uitnodiging Revealo';
+            const locationStr = actualLocation ? actualLocation.replace(/\n/g, ', ') : 'Zie uitnodiging link';
+            const customMessage = currentEventData && currentEventData.custom_message ? currentEventData.custom_message.replace(/\n/g, ' ') : 'Bekijk je digitale uitnodiging voor alle details!';
+            
+            let startDateFormatted = '20270615T140000Z';
+            let endDateFormatted = '20270615T230000Z';
+
+            if (currentEventData && currentEventData.event_date) {
+                const eventDateClean = currentEventData.event_date.replace(/-/g, '');
+                
+                // Probeer tijd te extraheren als deze ingevuld is (bijv. "14:00")
+                let timeStr = '140000';
+                if (currentEventData.event_time) {
+                    const timeMatch = currentEventData.event_time.match(/(\d{1,2})[:.](\d{2})/);
+                    if (timeMatch) {
+                        const hrs = timeMatch[1].padStart(2, '0');
+                        const mins = timeMatch[2];
+                        timeStr = `${hrs}${mins}00`;
+                    }
+                }
+
+                startDateFormatted = `${eventDateClean}T${timeStr}`;
+                endDateFormatted = `${eventDateClean}T230000`;
+            }
+
             const icsData =
                 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Revealo//NL
 BEGIN:VEVENT
-SUMMARY:Uitnodiging Revealo
-DESCRIPTION:Save the date!
-DTSTART:20270615T140000Z
-DTEND:20270615T230000Z
+SUMMARY:${eventTitle}
+DESCRIPTION:${customMessage}
+LOCATION:${locationStr}
+DTSTART:${startDateFormatted}
+DTEND:${endDateFormatted}
 END:VEVENT
 END:VCALENDAR`;
 
             const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'Save-The-Date.ics');
+            const safeFileName = eventTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            link.setAttribute('download', `${safeFileName}-Save-The-Date.ics`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
