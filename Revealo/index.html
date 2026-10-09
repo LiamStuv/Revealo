@@ -16,12 +16,12 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%);
-            --accent-champagne: #f1c40f;
+            --accent-champagne: #ff8c00;
             --text-main: #ffffff;
-            --text-sub: #f1c40f;
+            --text-sub: #ff8c00;
             --font-title: 'Cinzel', serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --wax-bg: radial-gradient(circle at 35% 35%, #f3e5ab 0%, #f1c40f 60%, #9a7d0a 100%);
+            --wax-bg: radial-gradient(circle at 35% 35%, #ffb347 0%, #ff8c00 60%, #b35900 100%);
             --envelope-bg: linear-gradient(180deg, #1f052d 0%, #0d021a 100%);
             --card-bg: transparent;
         }
@@ -120,7 +120,7 @@
 
         .btn-cta {
             display: inline-block;
-            background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%);
+            background: linear-gradient(135deg, #ff8c00 0%, #e67e22 100%);
             color: #0b0c10;
             padding: 16px 36px;
             border-radius: 30px;
@@ -129,7 +129,7 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             text-decoration: none;
-            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.35);
             transition: transform 0.2s ease;
         }
 
@@ -321,6 +321,7 @@
         .names { font-family: var(--font-title); font-size: 42px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .date { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-sub); font-weight: 600; margin-bottom: 24px; }
 
+        /* LUXE EVENT INFO BOX */
         .event-info-box {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -328,7 +329,7 @@
             border-radius: 24px;
             padding: 20px;
             margin-bottom: 24px;
-            border: 1px solid rgba(241, 196, 15, 0.25);
+            border: 1px solid rgba(255, 140, 0, 0.3);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
             width: 100%;
             display: flex;
@@ -360,7 +361,7 @@
 
         .event-info-item .icon {
             font-size: 14px;
-            filter: drop-shadow(0 2px 4px rgba(241, 196, 15, 0.4));
+            filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.4));
         }
 
         .pin-unlock-btn { 
@@ -375,8 +376,8 @@
         }
 
         .custom-message-text { 
-            background: rgba(241, 196, 15, 0.08);
-            border: 1px dashed rgba(241, 196, 15, 0.3);
+            background: rgba(255, 140, 0, 0.1);
+            border: 1px dashed rgba(255, 140, 0, 0.4);
             border-radius: 14px;
             padding: 12px 16px;
             font-size: 12px; 
@@ -412,7 +413,7 @@
             cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .btn-rsvp { background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%); color: #0b0c10; box-shadow: 0 10px 25px rgba(241, 196, 15, 0.25); font-weight: 700; }
+        .btn-rsvp { background: linear-gradient(135deg, #ff8c00 0%, #e67e22 100%); color: #0b0c10; box-shadow: 0 10px 25px rgba(255, 140, 0, 0.35); font-weight: 700; }
         .btn-apple { background: rgba(255, 255, 255, 0.08); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.18); }
         .btn-google { background: rgba(255, 255, 255, 0.12); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.22); }
         .btn-calendar { background: transparent; color: var(--text-sub); font-size: 10px; padding: 6px 0; }
@@ -643,12 +644,12 @@
                 subtitle: "Día de los Muertos • Exclusive Reveal",
                 bgGradient: `
                     radial-gradient(circle at 50% 35%, rgba(45, 12, 68, 0.85) 0%, rgba(13, 2, 26, 0.98) 75%),
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f1c40f' fill-opacity='0.06'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ff8c00' fill-opacity='0.08'%3E%3Cpath d='M40 10c-5 0-9 4-9 9 0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7 0-5-4-9-9-9zm-3 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM0 50c0-5 4-9 9-9s9 4 9 9c0 3-1.5 5.5-3.8 7 .8 1.8 2.8 3 5.8 3 1 0 2 .8 2 1.8 0 3-2 5.2-5 5.2-1.5 0-2.8-.6-3.8-1.5-.2 1.2-1.2 2.2-2.4 2.2h-3.6c-1.2 0-2.2-1-2.4-2.2-1 .9-2.3 1.5-3.8 1.5-3 0-5-2.2-5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3C1.5 55.5 0 53 0 50zm80 0c0-5-4-9-9-9s-9 4-9 9c0 3 1.5 5.5 3.8 7-.8 1.8-2.8 3-5.8 3-1 0-2 .8-2 1.8 0 3 2 5.2 5 5.2 1.5 0 2.8-.6 3.8-1.5.2 1.2 1.2 2.2 2.4 2.2h3.6c1.2 0 2.2-1 2.4-2.2 1 .9 2.3 1.5 3.8 1.5 3 0 5-2.2 5-5.2 0-1 1-1.8-2-1.8-3 0-5-1.2-5.8-3 2.3-1.5 3.8-4 3.8-7z'/%3E%3C/g%3E%3C/svg%3E")
                 `,
-                accentColor: "#f1c40f",
+                accentColor: "#ff8c00",
                 defaultImage: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
                 textColor: "#ffffff",
-                textSubColor: "#f1c40f",
+                textSubColor: "#ff8c00",
                 music: "dia_music.mp3"
             },
             luxury_botanical: {
@@ -1066,16 +1067,16 @@ END:VCALENDAR`;
             document.body.removeChild(link);
         }
 
-        // KRASLAAG CANVAS
+        // KRASLAAG CANVAS (ORANJE GOUD ACCENT)
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
 
         function initScratchLayer() {
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#f1c40f');
-            gradient.addColorStop(0.5, '#d4ac0d');
-            gradient.addColorStop(1, '#9a7d0a');
+            gradient.addColorStop(0, '#ff8c00');
+            gradient.addColorStop(0.5, '#e67e22');
+            gradient.addColorStop(1, '#b35900');
 
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1177,13 +1178,13 @@ END:VCALENDAR`;
             const numPetals = 40;
             const petals = [];
 
-            const colors = ['rgba(241, 196, 15, 0.75)', 'rgba(230, 126, 34, 0.85)', 'rgba(231, 76, 60, 0.7)'];
+            const colors = ['rgba(255, 140, 0, 0.8)', 'rgba(230, 126, 34, 0.85)', 'rgba(231, 76, 60, 0.7)'];
 
             for (let i = 0; i < numPetals; i++) {
                 petals.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    rx: Math.random() * 6 + 4, // Vergroot van 1.5-3px naar 4-10px
+                    rx: Math.random() * 6 + 4,
                     ry: Math.random() * 3 + 2,
                     d: Math.random() * 0.8 + 0.4,
                     color: colors[Math.floor(Math.random() * colors.length)],
